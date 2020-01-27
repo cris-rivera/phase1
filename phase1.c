@@ -52,7 +52,8 @@ void startup()
    int result; /* value returned by call to fork1() */
 
    /* initialize the process table */
-
+   memset(ProcTable, 0, sizeof(ProcTable));   
+   
    /* Initialize the Ready list, etc. */
    if (DEBUG && debugflag)
       console("startup(): initializing the Ready & Blocked lists\n");
@@ -130,6 +131,13 @@ int fork1(char *name, int(*func)(char *), char *arg, int stacksize, int priority
    }
 
    /* find an empty slot in the process table */
+   for(int i = 0; i < MAXPROC; i++)
+   {
+	if(ProcTable[i].pid == 0)
+	{
+		proc_slot = i;
+	}
+   }
 
    /* fill-in entry in process table */
    if ( strlen(name) >= (MAXNAME - 1) ) {
