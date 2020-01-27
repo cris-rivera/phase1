@@ -28,6 +28,7 @@ int debugflag = 1;
 proc_struct ProcTable[MAXPROC];
 
 /* Process lists  */
+proc_ptr ReadyList;
 
 /* current process ID */
 proc_ptr Current;
@@ -110,7 +111,7 @@ void finish()
    Side Effects - ReadyList is changed, ProcTable is changed, Current
                   process information changed
    ------------------------------------------------------------------------ */
-int fork1(char *name, int (*f)(void *), void *arg, int stacksize, int priority)
+int fork1(char *name, int(*func)(char *), char *arg, int stacksize, int priority) // NAME CHANGE
 {
    int proc_slot;
 
@@ -118,8 +119,15 @@ int fork1(char *name, int (*f)(void *), void *arg, int stacksize, int priority)
       console("fork1(): creating process %s\n", name);
 
    /* test if in kernel mode; halt if in user mode */
-
+   if (psr_get() == 0){
+      console("fork1(): not in kernel mode");
+      halt(1);
+   }
    /* Return if stack size is too small */
+   if(stacksize < USLOSS_MIN_STACK){
+      console("fork1(): stack size too small");
+      halt(1);
+   }
 
    /* find an empty slot in the process table */
 
@@ -129,7 +137,7 @@ int fork1(char *name, int (*f)(void *), void *arg, int stacksize, int priority)
       halt(1);
    }
    strcpy(ProcTable[proc_slot].name, name);
-   ProcTable[proc_slot].start_func = f;
+   ProcTable[proc_slot].start_func = func;
    if ( arg == NULL )
       ProcTable[proc_slot].start_arg[0] = '\0';
    else if ( strlen(arg) >= (MAXARG - 1) ) {
