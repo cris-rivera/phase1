@@ -52,7 +52,22 @@ void startup()
    int result; /* value returned by call to fork1() */
 
    /* initialize the process table */
-   memset(ProcTable, 0, sizeof(ProcTable));   
+   for(i = 0; i < MAXPROC; i++)
+   {
+      ProcTable[i].next_proc_ptr = NULL;
+      ProcTable[i].child_proc_ptr = NULL;
+      ProcTable[i].next_sibling_ptr = NULL;
+      memset(ProcTable[i].name, 0, sizeof(ProcTable[i].name));
+      memset(ProcTable[i].start_arg, 0, sizeof(ProcTable[i].start_arg));
+      ProcTable[i].state.start = NULL;
+      ProcTable[i].state.initial_psr = 0;
+      ProcTable[i].pid = -1;
+      ProcTable[i].priority = 0;
+      ProcTable[i].start_func = NULL;
+      ProcTable[i].stack = NULL;
+      ProcTable[i].stacksize = 0;
+      ProcTable[i].status = 0;
+   }  
    
    /* Initialize the Ready list, etc. */
    if (DEBUG && debugflag)
@@ -133,7 +148,7 @@ int fork1(char *name, int(*func)(char *), char *arg, int stacksize, int priority
    /* find an empty slot in the process table */
    for(int i = 0; i < MAXPROC; i++)
    {
-	if(ProcTable[i].pid == 0)
+	if(ProcTable[i].pid == -1)
 	{
 		proc_slot = i;
 	}
@@ -240,7 +255,7 @@ void quit(int code)
    ----------------------------------------------------------------------- */
 void dispatcher(void)
 {
-   proc_ptr next_process;
+   proc_ptr next_process = NULL;
 
    p1_switch(Current->pid, next_process->pid);
 } /* dispatcher */
