@@ -1,14 +1,13 @@
 /* ------------------------------------------------------------------------
    phase1.c
-
    CSCV 452
-
    ------------------------------------------------------------------------ */
 #include <stdlib.h>
 #include <strings.h>
 #include <stdio.h>
 #include <phase1.h>
 #include "kernel.h"
+#include <usloss.h>
 
 /* ------------------------- Prototypes ----------------------------------- */
 int sentinel (void *);
@@ -29,6 +28,7 @@ proc_struct ProcTable[MAXPROC];
 
 /* Process lists  */
 proc_ptr ReadyList;
+proc_ptr BlockedList;
 
 /* current process ID */
 proc_ptr Current;
@@ -52,13 +52,16 @@ void startup()
    int result; /* value returned by call to fork1() */
 
    /* initialize the process table */
-
+   
+   //memset(ProcTable, 0, sizeof(ProcTable));   
+   
    /* Initialize the Ready list, etc. */
    if (DEBUG && debugflag)
       console("startup(): initializing the Ready & Blocked lists\n");
    ReadyList = NULL;
 
    /* Initialize the clock interrupt handler */
+   int vec[CLOCK DEV] = clock_handler;
 
    /* startup a sentinel process */
    if (DEBUG && debugflag)
@@ -120,21 +123,40 @@ int fork1(char *name, int(*func)(char *), char *arg, int stacksize, int priority
 
    /* test if in kernel mode; halt if in user mode */
    if (psr_get() == 0){
-      console("fork1(): not in kernel mode");
-      halt(1);
+      console("fork1(): not in kernel mode\n");
+      halt(1); 
    }
    /* Return if stack size is too small */
    if(stacksize < USLOSS_MIN_STACK){
-      console("fork1(): stack size too small");
-      halt(1);
+      console("fork1(): stack size too small\n");
+      halt(1); //or return -2?
    }
 
    /* find an empty slot in the process table */
+   for(int i = 0; i < MAXPROC; i++)
+   {
+      if(ProcTable[i].pid == 0) //NO_CURRENT_PROCESS instead of 0?
+      {
+         proc_slot = i;
+         //break?
+      }
+      
+   }
+
+   /* Other way to find slot
+   
+   int i = 0;
+   while(ProcTable[i].pid != NO_CURRENT_PROCESS)
+   {
+      i++;
+   }
+
+   */
 
    /* fill-in entry in process table */
    if ( strlen(name) >= (MAXNAME - 1) ) {
       console("fork1(): Process name is too long.  Halting...\n");
-      halt(1);
+      halt(1); //or return -1?
    }
    strcpy(ProcTable[proc_slot].name, name);
    ProcTable[proc_slot].start_func = func;
@@ -142,10 +164,41 @@ int fork1(char *name, int(*func)(char *), char *arg, int stacksize, int priority
       ProcTable[proc_slot].start_arg[0] = '\0';
    else if ( strlen(arg) >= (MAXARG - 1) ) {
       console("fork1(): argument too long.  Halting...\n");
-      halt(1);
+      halt(1); //or return -1?
    }
    else
       strcpy(ProcTable[proc_slot].start_arg, arg);
+
+
+   /* fill in priority */
+   if(priority > MAXPRIORITY){
+      console("fork1(): Priority exceeds highest priority\n");
+      halt(1); //or return -1?
+   }
+   else if(priority < MINPRIORITY){
+      console("fork1(): Priority preceeds lowers priority\n");
+      halt(1); //or return -1?
+   }
+   else{
+      ProcTable[proc_slot].priority = priority;
+   }
+
+   /* Allocate process stack */
+   void *stack_ptr;
+   stack_ptr = malloc(stacksize);  // Where do we free? in Join()??
+   ProcTable[proc_slot].stack = stack_ptr;
+   ProcTable[proc_slot].stacksize = stacksize;
+
+   /* Assign PID - Check code from Phase1 Q&A Q#10*/
+   if(next_pid > MAXPROC){
+      console("fork1(): Maximum number of processes exceeded");
+      halt(1);
+   }
+   ProcTable[proc_slot].pid = next_pid;
+   next_pid += 1;
+   
+
+
 
    /* Initialize context for this process, but use launch function pointer for
     * the initial value of the process's program counter (PC)
@@ -156,6 +209,12 @@ int fork1(char *name, int(*func)(char *), char *arg, int stacksize, int priority
 
    /* for future phase(s) */
    p1_fork(ProcTable[proc_slot].pid);
+
+   /* Call to Dispatcher if not Sentinel? */
+
+
+   //Return PID
+   return ProcTable[proc_slot].pid;
 
 } /* fork1 */
 
@@ -281,3 +340,16 @@ void disableInterrupts()
     /* We ARE in kernel mode */
     psr_set( psr_get() & ~PSR_CURRENT_INT );
 } /* disableInterrupts */
+
+
+/* ------------------------------------------------------------------------
+   Name - clock_handler
+   Purpose - 
+   Parameters - dev, *unit
+   Returns - nothing
+   Side Effects - 
+   ----------------------------------------------------------------------- */
+void clock_handler(int dev, void ∗unit){ 
+   //code
+}
+
