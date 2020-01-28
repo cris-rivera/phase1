@@ -127,7 +127,7 @@ void finish()
    Side Effects - ReadyList is changed, ProcTable is changed, Current
                   process information changed
    ------------------------------------------------------------------------ */
-int fork1(char *name, int(*func)(char *), char *arg, int stacksize, int priority) // NAME CHANGE
+int fork1(char *name, int(*f)(void *), char *arg, int stacksize, int priority)
 {
    int proc_slot;
 
@@ -160,7 +160,7 @@ int fork1(char *name, int(*func)(char *), char *arg, int stacksize, int priority
       halt(1);
    }
    strcpy(ProcTable[proc_slot].name, name);
-   ProcTable[proc_slot].start_func = func;
+   ProcTable[proc_slot].start_func = f;
    if ( arg == NULL )
       ProcTable[proc_slot].start_arg[0] = '\0';
    else if ( strlen(arg) >= (MAXARG - 1) ) {
