@@ -291,6 +291,29 @@ static void check_deadlock()
 {
 } /* check_deadlock */
 
+/* ------------------------------------------------------------------------
+ * Name - enableInterrupets
+ * Purpose - Enables all interrupts on vector table, however for phase 1
+ * it will only enable the clock interrupt.
+ * Parameters - none
+ * Side Effects: none yet
+ * ----------------------------------------------------------------------- */
+void enableInterrupts()
+{
+  
+  //if not in kernel mode...
+  if((PSR_CURRENT_MODE & psr_get()) == 0){
+    console("Kernel Error: Not in kernel mode. may not enable interrupts\n");
+    halt(1);
+  //else is in kernel mode...
+  }else
+  {
+  
+    //TODO: eneable clock interrupt
+
+  }
+
+}
 
 /*
  * Disables the interrupts.
