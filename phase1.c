@@ -127,7 +127,7 @@ void finish()
    Side Effects - ReadyList is changed, ProcTable is changed, Current
                   process information changed
    ------------------------------------------------------------------------ */
-int fork1(char *name, int(*f)(void *), void *arg, int stacksize, int priority)
+int fork1(char *name, int (*f)(void *), void *arg, int stacksize, int priority)
 {
    int proc_slot;
 
