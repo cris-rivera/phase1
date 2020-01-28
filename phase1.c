@@ -29,6 +29,7 @@ proc_struct ProcTable[MAXPROC];
 
 /* Process lists  */
 proc_ptr ReadyList;
+proc_ptr BlockedList;
 
 /* current process ID */
 proc_ptr Current;
@@ -73,6 +74,7 @@ void startup()
    if (DEBUG && debugflag)
       console("startup(): initializing the Ready & Blocked lists\n");
    ReadyList = NULL;
+   BlockedList = NULL;
 
    /* Initialize the clock interrupt handler */
 
