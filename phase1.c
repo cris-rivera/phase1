@@ -75,6 +75,7 @@ void startup()
       console("startup(): initializing the Ready & Blocked lists\n");
    ReadyList = NULL;
    BlockedList = NULL;
+   Current = NULL;
 
    /* Initialize the clock interrupt handler */
 
@@ -129,7 +130,7 @@ void finish()
    Side Effects - ReadyList is changed, ProcTable is changed, Current
                   process information changed
    ------------------------------------------------------------------------ */
-int fork1(char *name, int (*f)(void *), void *arg, int stacksize, int priority)
+int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
 {
    int proc_slot;
 
@@ -150,10 +151,10 @@ int fork1(char *name, int (*f)(void *), void *arg, int stacksize, int priority)
    /* find an empty slot in the process table */
    for(int i = 0; i < MAXPROC; i++)
    {
-	if(ProcTable[i].pid == -1)
-	{
-		proc_slot = i;
-	}
+	  if(ProcTable[i].pid == -1)
+	  {
+		  proc_slot = i;
+	  }
    }
 
    /* fill-in entry in process table */
