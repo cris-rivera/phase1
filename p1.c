@@ -7,13 +7,13 @@ p1_fork(int pid)
 {
   if(DEBUG && debugflag)
     console("p1_fork() called: pid = %d\n", pid);
-}/* p1_switch */
+}/* p1_fork */
 
 void 
 p1_switch(int old, int new)
 {
   if(DEBUG && debugflag)
-    console("p1_switch() called: pid = %d\n", pid);
+    console("p1_switch() called: old = %d, new = %d\n", old, new);
 }/* p1_switch */
 
 void

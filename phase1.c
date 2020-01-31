@@ -67,7 +67,7 @@ void startup()
       ProcTable[i].start_func = NULL;
       ProcTable[i].stack = NULL;
       ProcTable[i].stacksize = 0;
-      ProcTable[i].status = 0;
+      ProcTable[i].status = EMPTY;
    }  
    
    /* Initialize the Ready list, etc. */
@@ -132,7 +132,8 @@ void finish()
    ------------------------------------------------------------------------ */
 int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
 {
-   int proc_slot;
+   int proc_slot = next_pid % MAXPROC;
+   int pid_count = 0;
 
    if (DEBUG && debugflag)
       console("fork1(): creating process %s\n", name);
@@ -149,12 +150,22 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
    }
 
    /* find an empty slot in the process table */
-   for(int i = 0; i < MAXPROC; i++)
+   while(pid_count < MAXPROC && ProcTable[proc_slot].status != EMPTY)
    {
-	  if(ProcTable[i].pid == -1)
-	  {
-		  proc_slot = i;
-	  }
+      next_pid++;
+      proc_slot = next_pid % MAXPROC;
+      pid_count++;
+   }
+
+   /* Return if process table is full */
+   if(pid_count >= MAXPROC)
+   {
+      enableInterrupts();
+      if(DEBUG && debugflag)
+      {
+        console("fork1(): process table full\n");
+      }
+      return -1;
    }
 
    /* fill-in entry in process table */
@@ -163,7 +174,11 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
       halt(1);
    }
    strcpy(ProcTable[proc_slot].name, name);
+   ProcTable[proc_slot].pid = next_pid++;
    ProcTable[proc_slot].start_func = f;
+   ProcTable[proc_slot].stack = malloc(stacksize);
+   ProcTable[proc_slot].stacksize = stacksize;
+   ProcTable[proc_slot].priority = priority;
    if ( arg == NULL )
       ProcTable[proc_slot].start_arg[0] = '\0';
    else if ( strlen(arg) >= (MAXARG - 1) ) {
@@ -182,6 +197,8 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
 
    /* for future phase(s) */
    p1_fork(ProcTable[proc_slot].pid);
+
+   return ProcTable[proc_slot].pid;
 
 } /* fork1 */
 
@@ -259,7 +276,23 @@ void quit(int code)
 void dispatcher(void)
 {
    proc_ptr next_process = NULL;
+   int switch_control = FALSE;
 
+  /* checks if current process is blocked */
+  if(Current->status == BLOCKED)
+  {
+    switch_control = TRUE;
+  }
+  /* checks if current process is past time slice */
+
+  /* checks if current process is still the highest priority amongst READY
+   * processes                                                          */
+  
+  /* if true then initiate context switch*/
+  if(switch_control == TRUE)
+  {
+
+  }
    p1_switch(Current->pid, next_process->pid);
 } /* dispatcher */
 
