@@ -134,6 +134,7 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
 {
    int proc_slot = next_pid % MAXPROC;
    int pid_count = 0;
+   proc_ptr walker = NULL;
 
    if (DEBUG && debugflag)
       console("fork1(): creating process %s\n", name);
@@ -198,6 +199,40 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
    /* for future phase(s) */
    p1_fork(ProcTable[proc_slot].pid);
 
+  /* insert newly forked function into ReadyList */
+  if(ReadyList == NULL)
+  {
+    ReadyList = &ProcTable[proc_slot];
+  }
+
+  if(ProcTable[proc_slot].priority < ReadyList->priority)
+  {
+    ProcTable[proc_slot].next_proc_ptr = ReadyList;
+    ReadyList = &ProcTable[proc_slot];
+  }
+  else
+  {
+    walker = ReadyList->next_proc_ptr;
+    while(walker != NULL)
+    {
+      if(ProcTable[proc_slot].priority < walker->priority)
+      {
+        ProcTable[proc_slot].next_proc_ptr = walker;
+        walker = ReadyList;
+      }
+      
+      if(walker->next_proc_ptr == ProcTable[proc_slot].next_proc_ptr)
+      {
+        walker->next_proc_ptr = &ProcTable[proc_slot];
+      }
+      else
+      {
+        walker = walker->next_proc_ptr;
+      }
+
+    }
+  }
+  
    return ProcTable[proc_slot].pid;
 
 } /* fork1 */
