@@ -232,8 +232,10 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
 
     }
   }
+  /* sets current process' status to ready */
+  ProcTable[proc_slot].status = READY;
   
-   return ProcTable[proc_slot].pid;
+  return ProcTable[proc_slot].pid;
 
 } /* fork1 */
 
@@ -314,6 +316,12 @@ void dispatcher(void)
    proc_ptr next_process = NULL;
    int switch_control = FALSE;
 
+  /* checks if there is a process currently running */
+  if(Current == NULL)
+  {
+    switch_control = TRUE;
+  }
+
   /* checks if current process is blocked */
   if(Current->status == BLOCKED)
   {
@@ -327,6 +335,9 @@ void dispatcher(void)
   /* if true then initiate context switch*/
   if(switch_control == TRUE)
   {
+    next_process = ReadyList;
+    ReadyList = ReadyList->next_proc_ptr;
+    next_process->next_proc_ptr = NULL;
 
   }
    p1_switch(Current->pid, next_process->pid);
