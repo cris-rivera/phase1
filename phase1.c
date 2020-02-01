@@ -11,7 +11,7 @@
 #include "kernel.h"
 
 /* ------------------------- Prototypes ----------------------------------- */
-int sentinel (void *);
+int sentinel (char *);
 extern int start1 (char *);
 void dispatcher(void);
 void launch();
@@ -245,6 +245,7 @@ void launch()
    ------------------------------------------------------------------------ */
 int join(int *code)
 {
+  return 0;
 } /* join */
 
 
@@ -308,7 +309,7 @@ void dispatcher(void)
    Side Effects -  if system is in deadlock, print appropriate error
 		   and halt.
    ----------------------------------------------------------------------- */
-int sentinel (void * dummy)
+int sentinel (char * dummy)
 {
    if (DEBUG && debugflag)
       console("sentinel(): called\n");
