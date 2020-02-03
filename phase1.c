@@ -314,9 +314,9 @@ void quit(int code)
 void dispatcher(void)
 {
    proc_ptr next_process = NULL;
+   proc_ptr walker = NULL;
    int switch_control = FALSE;
-   //add walker variable pointer whatever
-
+   
   /* checks if there is a process currently running */
   if(Current == NULL)
   {
@@ -328,17 +328,34 @@ void dispatcher(void)
   {
     switch_control = TRUE;
   }
-  /* checks if current process is past time slice */
-
+  
   /* checks if current process is still the highest priority amongst READY
    * processes                                                          */
   
   /* if true then initiate context switch*/
   if(switch_control == TRUE)
   {
+   /* Sets top of ready list as next runnable process.
+    * Sets the top of ready list to the next ready process.
+    * disconnects next runnable process from ready list*/
     next_process = ReadyList;
     ReadyList = ReadyList->next_proc_ptr;
     next_process->next_proc_ptr = NULL;
+
+    walker = ReadyList;
+    while(walker->next_proc_ptr != NULL)
+    {
+      walker = walker->next_proc_ptr;
+    }
+
+    walker->next_proc_ptr = Current;
+    
+    Current->status = READY;
+    walker = Current;
+
+    Current = next_process;
+    Current->status = RUNNING;
+    context_switch(&walker->state, &Current->state);
 
   }
    p1_switch(Current->pid, next_process->pid);
