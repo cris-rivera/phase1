@@ -1,4 +1,6 @@
 #define DEBUG 0
+#define TRUE 1
+#define FALSE 0
 
 typedef struct proc_struct proc_struct;
 
@@ -32,6 +34,13 @@ union psr_values {
    struct psr_bits bits;
    unsigned int integer_part;
 };
+
+enum {
+  EMPTY,
+  BLOCKED,
+  READY,
+  RUNNING
+} status_code;
 
 /* Some useful constants.  Add more as needed... */
 #define NO_CURRENT_PROCESS NULL

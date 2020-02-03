@@ -11,7 +11,7 @@
 #include "kernel.h"
 
 /* ------------------------- Prototypes ----------------------------------- */
-int sentinel (void *);
+int sentinel (char *);
 extern int start1 (char *);
 void dispatcher(void);
 void launch();
@@ -29,6 +29,7 @@ proc_struct ProcTable[MAXPROC];
 
 /* Process lists  */
 proc_ptr ReadyList;
+proc_ptr BlockedList;
 
 /* current process ID */
 proc_ptr Current;
@@ -52,11 +53,29 @@ void startup()
    int result; /* value returned by call to fork1() */
 
    /* initialize the process table */
-
+   for(i = 0; i < MAXPROC; i++)
+   {
+      ProcTable[i].next_proc_ptr = NULL;
+      ProcTable[i].child_proc_ptr = NULL;
+      ProcTable[i].next_sibling_ptr = NULL;
+      memset(ProcTable[i].name, 0, sizeof(ProcTable[i].name));
+      memset(ProcTable[i].start_arg, 0, sizeof(ProcTable[i].start_arg));
+      ProcTable[i].state.start = NULL;
+      ProcTable[i].state.initial_psr = 0;
+      ProcTable[i].pid = -1;
+      ProcTable[i].priority = 0;
+      ProcTable[i].start_func = NULL;
+      ProcTable[i].stack = NULL;
+      ProcTable[i].stacksize = 0;
+      ProcTable[i].status = EMPTY;
+   }  
+   
    /* Initialize the Ready list, etc. */
    if (DEBUG && debugflag)
       console("startup(): initializing the Ready & Blocked lists\n");
    ReadyList = NULL;
+   BlockedList = NULL;
+   Current = NULL;
 
    /* Initialize the clock interrupt handler */
 
@@ -111,9 +130,11 @@ void finish()
    Side Effects - ReadyList is changed, ProcTable is changed, Current
                   process information changed
    ------------------------------------------------------------------------ */
-int fork1(char *name, int(*func)(char *), char *arg, int stacksize, int priority) // NAME CHANGE
+int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
 {
-   int proc_slot;
+   int proc_slot = next_pid % MAXPROC;
+   int pid_count = 0;
+   proc_ptr walker = NULL;
 
    if (DEBUG && debugflag)
       console("fork1(): creating process %s\n", name);
@@ -130,6 +151,23 @@ int fork1(char *name, int(*func)(char *), char *arg, int stacksize, int priority
    }
 
    /* find an empty slot in the process table */
+   while(pid_count < MAXPROC && ProcTable[proc_slot].status != EMPTY)
+   {
+      next_pid++;
+      proc_slot = next_pid % MAXPROC;
+      pid_count++;
+   }
+
+   /* Return if process table is full */
+   if(pid_count >= MAXPROC)
+   {
+      enableInterrupts();
+      if(DEBUG && debugflag)
+      {
+        console("fork1(): process table full\n");
+      }
+      return -1;
+   }
 
    /* fill-in entry in process table */
    if ( strlen(name) >= (MAXNAME - 1) ) {
@@ -137,7 +175,11 @@ int fork1(char *name, int(*func)(char *), char *arg, int stacksize, int priority
       halt(1);
    }
    strcpy(ProcTable[proc_slot].name, name);
-   ProcTable[proc_slot].start_func = func;
+   ProcTable[proc_slot].pid = next_pid++;
+   ProcTable[proc_slot].start_func = f;
+   ProcTable[proc_slot].stack = malloc(stacksize);
+   ProcTable[proc_slot].stacksize = stacksize;
+   ProcTable[proc_slot].priority = priority;
    if ( arg == NULL )
       ProcTable[proc_slot].start_arg[0] = '\0';
    else if ( strlen(arg) >= (MAXARG - 1) ) {
@@ -156,6 +198,44 @@ int fork1(char *name, int(*func)(char *), char *arg, int stacksize, int priority
 
    /* for future phase(s) */
    p1_fork(ProcTable[proc_slot].pid);
+
+  /* insert newly forked function into ReadyList */
+  if(ReadyList == NULL)
+  {
+    ReadyList = &ProcTable[proc_slot];
+  }
+
+  if(ProcTable[proc_slot].priority < ReadyList->priority)
+  {
+    ProcTable[proc_slot].next_proc_ptr = ReadyList;
+    ReadyList = &ProcTable[proc_slot];
+  }
+  else
+  {
+    walker = ReadyList->next_proc_ptr;
+    while(walker != NULL)
+    {
+      if(ProcTable[proc_slot].priority < walker->priority)
+      {
+        ProcTable[proc_slot].next_proc_ptr = walker;
+        walker = ReadyList;
+      }
+      
+      if(walker->next_proc_ptr == ProcTable[proc_slot].next_proc_ptr)
+      {
+        walker->next_proc_ptr = &ProcTable[proc_slot];
+      }
+      else
+      {
+        walker = walker->next_proc_ptr;
+      }
+
+    }
+  }
+  /* sets current process' status to ready */
+  ProcTable[proc_slot].status = READY;
+  
+  return ProcTable[proc_slot].pid;
 
 } /* fork1 */
 
@@ -202,6 +282,7 @@ void launch()
    ------------------------------------------------------------------------ */
 int join(int *code)
 {
+  return 0;
 } /* join */
 
 
@@ -232,8 +313,34 @@ void quit(int code)
    ----------------------------------------------------------------------- */
 void dispatcher(void)
 {
-   proc_ptr next_process;
+   proc_ptr next_process = NULL;
+   int switch_control = FALSE;
+   //add walker variable pointer whatever
 
+  /* checks if there is a process currently running */
+  if(Current == NULL)
+  {
+    switch_control = TRUE;
+  }
+
+  /* checks if current process is blocked */
+  if(Current->status == BLOCKED)
+  {
+    switch_control = TRUE;
+  }
+  /* checks if current process is past time slice */
+
+  /* checks if current process is still the highest priority amongst READY
+   * processes                                                          */
+  
+  /* if true then initiate context switch*/
+  if(switch_control == TRUE)
+  {
+    next_process = ReadyList;
+    ReadyList = ReadyList->next_proc_ptr;
+    next_process->next_proc_ptr = NULL;
+
+  }
    p1_switch(Current->pid, next_process->pid);
 } /* dispatcher */
 
@@ -249,7 +356,7 @@ void dispatcher(void)
    Side Effects -  if system is in deadlock, print appropriate error
 		   and halt.
    ----------------------------------------------------------------------- */
-int sentinel (void * dummy)
+int sentinel (char * dummy)
 {
    if (DEBUG && debugflag)
       console("sentinel(): called\n");
@@ -266,6 +373,29 @@ static void check_deadlock()
 {
 } /* check_deadlock */
 
+/* ------------------------------------------------------------------------
+ * Name - enableInterrupets
+ * Purpose - Enables all interrupts on vector table, however for phase 1
+ * it will only enable the clock interrupt.
+ * Parameters - none
+ * Side Effects: none yet
+ * ----------------------------------------------------------------------- */
+void enableInterrupts()
+{
+  
+  //if not in kernel mode...
+  if((PSR_CURRENT_MODE & psr_get()) == 0){
+    console("Kernel Error: Not in kernel mode. may not enable interrupts\n");
+    halt(1);
+  //else is in kernel mode...
+  }else
+  {
+  
+    //TODO: eneable clock interrupt
+
+  }
+
+}
 
 /*
  * Disables the interrupts.
