@@ -317,12 +317,10 @@ void dispatcher(void)
 {
    proc_ptr next_process = NULL;
    proc_ptr walker = NULL;
-   int switch_control = FALSE;
    
   /* checks if there is a process currently running */
   if(Current == NULL)
   {
-
     next_process = ReadyList;
     ReadyList = ReadyList->next_proc_ptr;
     next_process->next_proc_ptr = NULL;
@@ -331,18 +329,26 @@ void dispatcher(void)
     Current->status = RUNNING;
     context_switch(NULL, &Current->state);
   }
-
-  /* checks if current process is blocked */
-  if(Current->status == BLOCKED)
+  else if(Current->status == BLOCKED)
   {
-    switch_control = TRUE;
+    next_process = ReadyList;
+    ReadyList = ReadyList->next_proc_ptr;
+    next_process->next_proc_ptr = NULL;
+
+    walker = BlockedList;
+    while(walker->next_proc_ptr != NULL)
+    {
+      walker = walker->next_proc_ptr;
+    }
+
+    walker->next_proc_ptr = Current;
+    walker = Current;
+    Current = next_process;
+    Current->status = RUNNING;
+    context_switch(&walker->state, &Current->state);
+
   }
-  
-  /* checks if current process is still the highest priority amongst READY
-   * processes                                                          */
-  
-  /* if true then initiate context switch*/
-  if(switch_control == TRUE)
+  else
   {
    /* Sets top of ready list as next runnable process.
     * Sets the top of ready list to the next ready process.
