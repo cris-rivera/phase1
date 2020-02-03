@@ -442,4 +442,9 @@ void disableInterrupts()
   } else
     /* We ARE in kernel mode */
     psr_set( psr_get() & ~PSR_CURRENT_INT );
-} /* disableInterrupts */
+} /* disableInterrupts */ 
+
+int getpid()
+{
+  return Current->pid;
+}
