@@ -10,7 +10,6 @@
 #include <phase1.h>
 #include "kernel.h"
 
-//Hi again
 /* ------------------------- Prototypes ----------------------------------- */
 int sentinel (char *);
 extern int start1 (char *);
