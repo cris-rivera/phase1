@@ -448,3 +448,22 @@ int getpid()
 {
   return Current->pid;
 }
+
+void dump_processes()
+{
+  int i = 0;
+  proc_ptr walker = &ProcTable[i];
+
+  while(walker->pid != -1)
+  {
+    console("Name: \n");
+    console("PID: %d\n", walker->pid);
+    console("Priority: %d\n", walker->priority);
+    console("Status: \n");
+    console("CPU Time: \n");
+    console("Parent's PID: \n");
+    console("Children: \n\n");
+    i += i;
+    walker = &ProcTable[i];
+  }
+}
