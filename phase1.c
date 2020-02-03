@@ -315,6 +315,7 @@ void dispatcher(void)
 {
    proc_ptr next_process = NULL;
    int switch_control = FALSE;
+   //add walker variable pointer whatever
 
   /* checks if there is a process currently running */
   if(Current == NULL)
