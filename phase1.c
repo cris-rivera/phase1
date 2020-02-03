@@ -238,6 +238,8 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
   /* sets current process' status to ready */
   ProcTable[proc_slot].status = READY;
   
+  dispatcher();
+
   return ProcTable[proc_slot].pid;
 
 } /* fork1 */
@@ -317,31 +319,61 @@ void quit(int code)
 void dispatcher(void)
 {
    proc_ptr next_process = NULL;
-   int switch_control = FALSE;
-   //add walker variable pointer whatever
-
+   proc_ptr walker = NULL;
+   
   /* checks if there is a process currently running */
   if(Current == NULL)
-  {
-    switch_control = TRUE;
-  }
-
-  /* checks if current process is blocked */
-  if(Current->status == BLOCKED)
-  {
-    switch_control = TRUE;
-  }
-  /* checks if current process is past time slice */
-
-  /* checks if current process is still the highest priority amongst READY
-   * processes                                                          */
-  
-  /* if true then initiate context switch*/
-  if(switch_control == TRUE)
   {
     next_process = ReadyList;
     ReadyList = ReadyList->next_proc_ptr;
     next_process->next_proc_ptr = NULL;
+    
+    Current = next_process;
+    Current->status = RUNNING;
+    context_switch(NULL, &Current->state);
+  }
+  else if(Current->status == BLOCKED)
+  {
+    next_process = ReadyList;
+    ReadyList = ReadyList->next_proc_ptr;
+    next_process->next_proc_ptr = NULL;
+
+    walker = BlockedList;
+    while(walker->next_proc_ptr != NULL)
+    {
+      walker = walker->next_proc_ptr;
+    }
+
+    walker->next_proc_ptr = Current;
+    walker = Current;
+    Current = next_process;
+    Current->status = RUNNING;
+    context_switch(&walker->state, &Current->state);
+
+  }
+  else
+  {
+   /* Sets top of ready list as next runnable process.
+    * Sets the top of ready list to the next ready process.
+    * disconnects next runnable process from ready list*/
+    next_process = ReadyList;
+    ReadyList = ReadyList->next_proc_ptr;
+    next_process->next_proc_ptr = NULL;
+
+    walker = ReadyList;
+    while(walker->next_proc_ptr != NULL)
+    {
+      walker = walker->next_proc_ptr;
+    }
+
+    walker->next_proc_ptr = Current;
+    
+    Current->status = READY;
+    walker = Current;
+
+    Current = next_process;
+    Current->status = RUNNING;
+    context_switch(&walker->state, &Current->state);
 
   }
    p1_switch(Current->pid, next_process->pid);
@@ -413,4 +445,28 @@ void disableInterrupts()
   } else
     /* We ARE in kernel mode */
     psr_set( psr_get() & ~PSR_CURRENT_INT );
-} /* disableInterrupts */
+} /* disableInterrupts */ 
+
+int getpid()
+{
+  return Current->pid;
+}
+
+void dump_processes()
+{
+  int i = 0;
+  proc_ptr walker = &ProcTable[i];
+
+  while(walker->pid != -1)
+  {
+    console("Name: \n");
+    console("PID: %d\n", walker->pid);
+    console("Priority: %d\n", walker->priority);
+    console("Status: \n");
+    console("CPU Time: \n");
+    console("Parent's PID: \n");
+    console("Children: \n\n");
+    i += i;
+    walker = &ProcTable[i];
+  }
+}
