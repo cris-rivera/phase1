@@ -161,7 +161,7 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
    /* Return if process table is full */
    if(pid_count >= MAXPROC)
    {
-      enableInterrupts();
+      //enableInterrupts();
       if(DEBUG && debugflag)
       {
         console("fork1(): process table full\n");
