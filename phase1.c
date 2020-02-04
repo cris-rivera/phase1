@@ -122,6 +122,13 @@ void finish()
       console("in finish...\n");
 } /* finish */
 
+/* ------------------------------------------------------------------------
+112    Name - RdyList_Insert
+113    Purpose - Inserts newly forked process into the ready table based on priority.
+114    Parameters - A pointer to the newl forked process called 'process'.
+115    Returns - nothing
+116    Side Effects - ReadyList has a new addition in a sorted place.
+117    ----------------------------------------------------------------------- */
 void RdyList_Insert(proc_ptr process)
 {
 <<<<<<< HEAD
