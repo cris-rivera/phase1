@@ -119,6 +119,46 @@ void finish()
       console("in finish...\n");
 } /* finish */
 
+void RdyList_Insert(proc_ptr process)
+{
+  
+  proc_ptr walker = NULL;
+
+  if(ReadyList == NULL)
+  {
+     ReadyList = process;
+  }
+
+  if(process->priority < ReadyList->priority)
+  {
+     process->next_proc_ptr = ReadyList;
+     ReadyList = process;
+  }
+  else
+  {
+     walker = ReadyList->next_proc_ptr;
+     while(walker != NULL)
+     {
+       if(process->priority < walker->priority)
+       {
+         process->next_proc_ptr = walker;
+         walker = ReadyList;
+       }
+
+       if(walker->next_proc_ptr == process->next_proc_ptr)
+       {
+         walker->next_proc_ptr = process;
+       }
+       else
+       {
+         walker = walker->next_proc_ptr;
+       }
+
+     }
+  }
+
+}
+
 /* ------------------------------------------------------------------------
    Name - fork1
    Purpose - Gets a new process from the process table and initializes
@@ -135,7 +175,7 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
 {
    int proc_slot = next_pid % MAXPROC;
    int pid_count = 0;
-   proc_ptr walker = NULL;
+   proc_ptr proc_tbl_ptr = NULL;
 
    if (DEBUG && debugflag)
       console("fork1(): creating process %s\n", name);
@@ -197,46 +237,17 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
                 ProcTable[proc_slot].stack, 
                 ProcTable[proc_slot].stacksize, launch);
 
+   proc_tbl_ptr = &ProcTable[proc_slot];
+   RdyList_Insert(proc_tbl_ptr);
+   ProcTable[proc_slot].status = READY;
+   
    /* for future phase(s) */
    p1_fork(ProcTable[proc_slot].pid);
 
-  /* insert newly forked function into ReadyList */
-  if(ReadyList == NULL)
-  {
-    ReadyList = &ProcTable[proc_slot];
+  if(strcmp(ProcTable[proc_slot].name, "sentinel"))
+  { 
+    dispatcher();
   }
-
-  if(ProcTable[proc_slot].priority < ReadyList->priority)
-  {
-    ProcTable[proc_slot].next_proc_ptr = ReadyList;
-    ReadyList = &ProcTable[proc_slot];
-  }
-  else
-  {
-    walker = ReadyList->next_proc_ptr;
-    while(walker != NULL)
-    {
-      if(ProcTable[proc_slot].priority < walker->priority)
-      {
-        ProcTable[proc_slot].next_proc_ptr = walker;
-        walker = ReadyList;
-      }
-      
-      if(walker->next_proc_ptr == ProcTable[proc_slot].next_proc_ptr)
-      {
-        walker->next_proc_ptr = &ProcTable[proc_slot];
-      }
-      else
-      {
-        walker = walker->next_proc_ptr;
-      }
-
-    }
-  }
-  /* sets current process' status to ready */
-  ProcTable[proc_slot].status = READY;
-  
-  dispatcher();
 
   return ProcTable[proc_slot].pid;
 
