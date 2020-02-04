@@ -440,14 +440,11 @@ void enableInterrupts()
     console("Kernel Error: Not in kernel mode. may not enable interrupts\n");
     halt(1);
   //else is in kernel mode...
-  }else
-  {
-     
-    //TODO: eneable clock interrupt
+  } else
+   /* We ARE in kernel mode */
+   psr_set( psr_get() | PSR_CURRENT_INT );
+} /* enablebleInterrupts */ 
 
-  }
-
-}
 
 /*
  * Disables the interrupts.
