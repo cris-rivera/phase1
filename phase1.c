@@ -143,7 +143,7 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
       console("fork1(): creating process %s\n", name);
 
    /* test if in kernel mode; halt if in user mode */
-   if (psr_get() == 0){
+  if((PSR_CURRENT_MODE & psr_get()) == 0){
       console("fork1(): not in kernel mode");
       halt(1);
    }
@@ -200,7 +200,7 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
                 ProcTable[proc_slot].stacksize, launch);
 
    /* for future phase(s) */
-   p1_fork(ProcTable[proc_slot].pid);
+   //p1_fork(ProcTable[proc_slot].pid);
 
   /* insert newly forked function into ReadyList */
   if(ReadyList == NULL)
@@ -406,6 +406,23 @@ int sentinel (char * dummy)
 /* check to determine if deadlock has occurred... */
 static void check_deadlock()
 {
+   if(check_io() == 1)
+      return;
+
+   //Check the number of living processes
+   int process_count = 0;
+   for(int i = 0; i < MAXPROC; i++)
+   {
+      if(ProcTable[i].status != EMPTY)
+         process_count++;
+   }
+
+   if(process_count > 1)
+      halt(1);
+   
+   if(process_count == 1)
+      halt(0);
+
 } /* check_deadlock */
 
 /* ------------------------------------------------------------------------
@@ -425,7 +442,7 @@ void enableInterrupts()
   //else is in kernel mode...
   }else
   {
-  
+     
     //TODO: eneable clock interrupt
 
   }
