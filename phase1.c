@@ -18,6 +18,9 @@ void dispatcher(void);
 void launch();
 static void enableInterrupts();
 static void check_deadlock();
+void RdyList_Insert(proc_ptr process);
+int getpid();
+void dump_processes();
 
 
 /* -------------------------- Globals ------------------------------------- */
@@ -121,6 +124,7 @@ void finish()
 
 void RdyList_Insert(proc_ptr process)
 {
+<<<<<<< HEAD
   
   proc_ptr walker = NULL;
 
@@ -157,6 +161,41 @@ void RdyList_Insert(proc_ptr process)
      }
   }
 
+=======
+    proc_ptr walker = NULL;
+
+    if(ReadyList == NULL)
+    {
+      ReadyList = process;
+    }
+
+    if(process->priority < ReadyList->priority)
+    {
+      process->next_proc_ptr = ReadyList;
+      ReadyList = process;
+    }
+    else
+    {
+      walker = ReadyList->next_proc_ptr;
+      while(walker != NULL)
+      {
+        if(process->priority < walker->priority)
+        {
+          process->next_proc_ptr = walker;
+          walker = ReadyList;
+        }
+
+        if(walker->next_proc_ptr == process->next_proc_ptr)
+        {
+            walker->next_proc_ptr = process;
+        }
+        else
+        {
+          walker = walker->next_proc_ptr;
+        }
+      }
+    }
+>>>>>>> Cris-patch-1
 }
 
 /* ------------------------------------------------------------------------
@@ -240,6 +279,7 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
    proc_tbl_ptr = &ProcTable[proc_slot];
    RdyList_Insert(proc_tbl_ptr);
    ProcTable[proc_slot].status = READY;
+<<<<<<< HEAD
    
    /* for future phase(s) */
    p1_fork(ProcTable[proc_slot].pid);
@@ -249,6 +289,18 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
     dispatcher();
   }
 
+=======
+
+   /* for future phase(s) */
+   p1_fork(ProcTable[proc_slot].pid);
+
+  if(strcmp(ProcTable[proc_slot].name,  "sentinel"))
+  {  
+    dispatcher();
+
+  }
+
+>>>>>>> Cris-patch-1
   return ProcTable[proc_slot].pid;
 
 } /* fork1 */
