@@ -263,6 +263,7 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
   }
 
   enableInterrupts();
+  console("IN FORK\n");
   return ProcTable[proc_slot].pid;
 
 } /* fork1 */
@@ -339,10 +340,14 @@ int join(int *code)
    ------------------------------------------------------------------------ */
 void quit(int code)
 {
-   if(Current->child_proc_ptr != EMPTY)
+   console("IN QUIT\n");
+   if(Current->child_proc_ptr->child_proc_ptr != EMPTY)
    {
-      console("quit(): Child process is active");
+      console("quit(): Child processes are active");
       halt(1);
+   }
+   else{
+      Current->child_proc_ptr->status = EMPTY;
    }
 
 
@@ -532,3 +537,5 @@ void dump_processes()
     walker = &ProcTable[i];
   }
 }
+
+
