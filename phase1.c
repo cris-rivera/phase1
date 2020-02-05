@@ -23,6 +23,7 @@ static void check_deadlock();
 void RdyList_Insert(proc_ptr process);
 int getpid();
 void dump_processes();
+int zap(int pid);
 
 
 /* -------------------------- Globals ------------------------------------- */
@@ -36,6 +37,7 @@ proc_struct ProcTable[MAXPROC];
 /* Process lists  */
 proc_ptr ReadyList;
 proc_ptr BlockedList;
+proc_ptr ZapperList;
 
 /* current process ID */
 proc_ptr Current;
@@ -74,6 +76,7 @@ void startup()
       ProcTable[i].stack = NULL;
       ProcTable[i].stacksize = 0;
       ProcTable[i].status = EMPTY;
+      ProcTable[i].z_status = NONE;
    }  
    
    /* Initialize the Ready list, etc. */
@@ -81,6 +84,7 @@ void startup()
       console("startup(): initializing the Ready & Blocked lists\n");
    ReadyList = NULL;
    BlockedList = NULL;
+   ZapperList = NULL;
    Current = NULL;
 
    /* Initialize the clock interrupt handler */
@@ -233,7 +237,6 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
    ProcTable[proc_slot].stack = malloc(stacksize);
    ProcTable[proc_slot].stacksize = stacksize;
    ProcTable[proc_slot].priority = priority;
-   ProcTable[proc_slot].z_status = FALSE;
    if ( arg == NULL )
       ProcTable[proc_slot].start_arg[0] = '\0';
    else if ( strlen(arg) >= (MAXARG - 1) ) {
@@ -484,6 +487,35 @@ static void check_deadlock()
       halt(0);
 
 } /* check_deadlock */
+
+int zap(int pid)
+{
+  int proc_slot = 0;
+
+  //for loop to iterate through proc_list to find PID to zap
+  for(int i = 0; i < MAXPROC; i++)
+  {
+    if(ProcTable[i].pid == pid)
+      proc_slot = i;
+  }
+  //change z_status of newly found pid process to zapped
+  ProcTable[proc_slot].z_status = ZAPPED;
+  //change z_status of current process to zapper
+  Current->z_status = ZAPPER;
+  //add current process to ZapperList
+  if(ZapperList == NULL)
+    ZapperList = Current;
+  //else
+    //iterate through ZapperList and add itself to the end
+
+  //change status of current process to BLOCKED
+  Current->status = BLOCKED;
+  //call dispatcher()
+
+  //to supress warning for now
+  return 0;
+
+}
 
 /* ------------------------------------------------------------------------
  * Name - enableInterrupets
