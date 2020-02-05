@@ -262,6 +262,7 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
     dispatcher();
   }
 
+  enableInterrupts();
   return ProcTable[proc_slot].pid;
 
 } /* fork1 */
@@ -309,6 +310,20 @@ void launch()
    ------------------------------------------------------------------------ */
 int join(int *code)
 {
+  if(Current->child_proc_ptr == EMPTY)
+     return -2;
+   
+   //Check if parent is zapped 
+   // If yes, return -1
+
+   //EMPTY vs QUIT?
+   while(Current->child_proc_ptr->status != EMPTY)
+      waitint();
+   
+   if(Current->child_proc_ptr == EMPTY)
+      return Current->child_proc_ptr->pid;
+   
+  console("join(): Should not see this!");
   return 0;
 } /* join */
 
@@ -324,6 +339,13 @@ int join(int *code)
    ------------------------------------------------------------------------ */
 void quit(int code)
 {
+   if(Current->child_proc_ptr != EMPTY)
+   {
+      console("quit(): Child process is active");
+      halt(1);
+   }
+
+
    p1_quit(Current->pid);
 } /* quit */
 

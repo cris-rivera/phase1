@@ -29,6 +29,9 @@ int XXp1(char *arg)
   printf("XXp1(): arg = `%s'\n", arg);
   for(i = 0; i < 100; i++)
     ;
+
+  console("hey\n");
   quit(-3);
+  console("ho!\n");
   return 0;
 }
