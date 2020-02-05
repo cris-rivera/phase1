@@ -491,6 +491,7 @@ static void check_deadlock()
 int zap(int pid)
 {
   int proc_slot = 0;
+  proc_ptr walker = NULL;
 
   //for loop to iterate through proc_list to find PID to zap
   for(int i = 0; i < MAXPROC; i++)
@@ -505,12 +506,22 @@ int zap(int pid)
   //add current process to ZapperList
   if(ZapperList == NULL)
     ZapperList = Current;
-  //else
+  else
+  {
     //iterate through ZapperList and add itself to the end
+    walker = ZapperList;
+    while(walker->next_proc_ptr != NULL)
+    {
+      walker = walker->next_proc_ptr;
+    }
 
+    walker->next_proc_ptr = Current;
+  }
+    
   //change status of current process to BLOCKED
   Current->status = BLOCKED;
-  //call dispatcher()
+  //call dispatcher
+  dispatcher();
 
   //to supress warning for now
   return 0;
