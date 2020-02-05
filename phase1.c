@@ -233,6 +233,7 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
    ProcTable[proc_slot].stack = malloc(stacksize);
    ProcTable[proc_slot].stacksize = stacksize;
    ProcTable[proc_slot].priority = priority;
+   ProcTable[proc_slot].z_status = FALSE;
    if ( arg == NULL )
       ProcTable[proc_slot].start_arg[0] = '\0';
    else if ( strlen(arg) >= (MAXARG - 1) ) {
@@ -255,6 +256,11 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
    
    /* for future phase(s) */
    //p1_fork(ProcTable[proc_slot].pid);
+
+  if(Current != NULL)
+  {
+    Current->child_proc_ptr = &ProcTable[proc_slot];
+  }
 
   // Avoid calling sentinel
   if(strcmp(ProcTable[proc_slot].name, "sentinel"))
@@ -309,6 +315,22 @@ void launch()
    ------------------------------------------------------------------------ */
 int join(int *code)
 {
+  if(Current->child_proc_ptr == EMPTY)
+    return -2;
+
+  //Check if parent is zapped
+  // If yes, return -1
+  if(Current->z_status == TRUE)
+    return -1;
+  
+  //EMPTY vs QUIT?
+  while(Current->child_proc_ptr->status != EMPTY)
+    waitint();
+
+  if(Current->child_proc_ptr == EMPTY)
+    return Current->child_proc_ptr->pid;
+
+  console("join(): Should not see this!");
   return 0;
 } /* join */
 
@@ -324,6 +346,18 @@ int join(int *code)
    ------------------------------------------------------------------------ */
 void quit(int code)
 {
+  proc_ptr temp = Current->child_proc_ptr;
+
+  console("IN QUIT\n");
+  if(temp->child_proc_ptr != EMPTY)
+  {
+    console("quit(): Child processes are active");
+    halt(1);
+  }
+  else{
+    temp->status = EMPTY;
+  }
+
    p1_quit(Current->pid);
 } /* quit */
 

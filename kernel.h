@@ -19,6 +19,7 @@ struct proc_struct {
    char          *stack;
    unsigned int   stacksize;
    int            status;         /* READY, BLOCKED, QUIT, etc. */
+   int            z_status;       /* holds status on if the process is or is not zapped. TRUE/FALSE value */
    /* other fields as needed... */
 };
 
