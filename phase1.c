@@ -499,29 +499,36 @@ int zap(int pid)
     if(ProcTable[i].pid == pid)
       proc_slot = i;
   }
-  //change z_status of newly found pid process to zapped
-  ProcTable[proc_slot].z_status = ZAPPED;
-  //change z_status of current process to zapper
-  Current->z_status = ZAPPER;
-  //add current process to ZapperList
-  if(ZapperList == NULL)
-    ZapperList = Current;
-  else
-  {
-    //iterate through ZapperList and add itself to the end
-    walker = ZapperList;
-    while(walker->next_proc_ptr != NULL)
-    {
-      walker = walker->next_proc_ptr;
-    }
 
-    walker->next_proc_ptr = Current;
-  }
+  //If statement to assure zapping only occurs if pid is actually found in the
+  //process table
+  if(proc_slot != 0)
+  {
+    //change z_status of newly found pid process to zapped
+    ProcTable[proc_slot].z_status = ZAPPED;
+    //change z_status of current process to zapper
+    Current->z_status = ZAPPER;
+    Current->z_pid = ProcTable[proc_slot].pid;
+    //add current process to ZapperList
+    if(ZapperList == NULL)
+      ZapperList = Current;
+    else
+    {
+      //iterate through ZapperList and add itself to the end
+      walker = ZapperList;
+      while(walker->next_proc_ptr != NULL)
+      {
+        walker = walker->next_proc_ptr;
+      }
+
+      walker->next_proc_ptr = Current;
+    }
     
-  //change status of current process to BLOCKED
-  Current->status = BLOCKED;
-  //call dispatcher
-  dispatcher();
+    //change status of current process to BLOCKED
+    Current->status = BLOCKED;
+    //call dispatcher
+    dispatcher();
+  }
 
   //to supress warning for now
   return 0;
