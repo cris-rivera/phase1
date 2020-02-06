@@ -74,6 +74,7 @@ void startup()
       ProcTable[i].stack = NULL;
       ProcTable[i].stacksize = 0;
       ProcTable[i].status = EMPTY;
+      ProcTable[i].exit_status = NULL;
    }  
    
    /* Initialize the Ready list, etc. */
@@ -84,6 +85,7 @@ void startup()
    Current = NULL;
 
    /* Initialize the clock interrupt handler */
+   //int vec[CLOCK_DEV] = clock_handler;
 
    /* startup a sentinel process */
    if (DEBUG && debugflag)
@@ -317,13 +319,14 @@ int join(int *code)
    //Check if parent is zapped 
    // If yes, return -1
 
-   //EMPTY vs QUIT?
-   while(Current->child_proc_ptr->status != EMPTY)
-      waitint();
-   
-   if(Current->child_proc_ptr == EMPTY)
-      return Current->child_proc_ptr->pid;
-   
+  while(Current->child_proc_ptr->exit_status == NULL)
+  {
+     //sleep? 
+  }
+
+  *code = Current->child_proc_ptr->exit_status;
+
+
   console("join(): Should not see this!");
   return 0;
 } /* join */
@@ -340,14 +343,13 @@ int join(int *code)
    ------------------------------------------------------------------------ */
 void quit(int code)
 {
-   console("IN QUIT\n");
    if(Current->child_proc_ptr->child_proc_ptr != EMPTY)
    {
       console("quit(): Child processes are active");
       halt(1);
    }
    else{
-      Current->child_proc_ptr->status = EMPTY;
+      Current->child_proc_ptr->exit_status = code;
    }
 
 
@@ -538,4 +540,33 @@ void dump_processes()
   }
 }
 
+/* Unifished Clock handler
 
+void clock_handler()
+{
+	if(Current->start_time == NULL)
+		Current->start_time = read_time();
+	time_slice();
+
+}
+
+int read_time(void)
+{
+	// Return system time in microseconds
+	return sys_clock()/1000;
+}
+
+int read_cur_start_time(void)
+{
+	return Current->start_time;
+}
+
+void time_slice(void)
+{
+	if(((read_time() - read_cur_start_time()) * 1000) >= 80))
+		dispatcher();
+	else
+		return; 
+}
+
+*/

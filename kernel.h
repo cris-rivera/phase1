@@ -19,6 +19,7 @@ struct proc_struct {
    char          *stack;
    unsigned int   stacksize;
    int            status;         /* READY, BLOCKED, QUIT, etc. */
+   int            exit_status;   
    /* other fields as needed... */
 };
 
