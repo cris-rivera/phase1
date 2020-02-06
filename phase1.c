@@ -76,11 +76,8 @@ void startup()
       ProcTable[i].stack = NULL;
       ProcTable[i].stacksize = 0;
       ProcTable[i].status = EMPTY;
-<<<<<<< HEAD
-      ProcTable[i].exit_status = NULL;
-=======
+      ProcTable[i].exit_status = -1;
       ProcTable[i].z_status = NONE;
->>>>>>> Cris-patch-1
    }  
    
    /* Initialize the Ready list, etc. */
@@ -326,34 +323,17 @@ void launch()
 int join(int *code)
 {
   if(Current->child_proc_ptr == EMPTY)
-<<<<<<< HEAD
      return -2;
    
    //Check if parent is zapped 
    // If yes, return -1
 
-  while(Current->child_proc_ptr->exit_status == NULL)
+  while(Current->child_proc_ptr->exit_status == -1)
   {
      //sleep? 
   }
 
   *code = Current->child_proc_ptr->exit_status;
-
-=======
-    return -2;
-
-  //Check if parent is zapped
-  // If yes, return -1
-  if(Current->z_status == TRUE)
-    return -1;
-  
-  //EMPTY vs QUIT?
-  while(Current->child_proc_ptr->status != EMPTY)
-    waitint();
-
-  if(Current->child_proc_ptr == EMPTY)
-    return Current->child_proc_ptr->pid;
->>>>>>> Cris-patch-1
 
   console("join(): Should not see this!");
   return 0;
@@ -371,7 +351,6 @@ int join(int *code)
    ------------------------------------------------------------------------ */
 void quit(int code)
 {
-<<<<<<< HEAD
    if(Current->child_proc_ptr != EMPTY)
    {
       console("quit(): Child processes are active");
@@ -382,19 +361,6 @@ void quit(int code)
    }
 
    console("QUIT\n");
-=======
-  proc_ptr temp = Current->child_proc_ptr;
-
-  console("IN QUIT\n");
-  if(temp->child_proc_ptr != EMPTY)
-  {
-    console("quit(): Child processes are active");
-    halt(1);
-  }
-  else{
-    temp->status = EMPTY;
-  }
->>>>>>> Cris-patch-1
 
    p1_quit(Current->pid);
 } /* quit */

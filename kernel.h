@@ -19,12 +19,9 @@ struct proc_struct {
    char          *stack;
    unsigned int   stacksize;
    int            status;         /* READY, BLOCKED, QUIT, etc. */
-<<<<<<< HEAD
    int            exit_status;   
-=======
    int            z_status;       /* NONE, ZAPPED, ZAPPER. */
    short          z_pid;          /* pid of process zapped by this process */
->>>>>>> Cris-patch-1
    /* other fields as needed... */
 };
 
