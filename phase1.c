@@ -23,6 +23,7 @@ static void check_deadlock();
 void RdyList_Insert(proc_ptr process);
 int getpid();
 void dump_processes();
+int zap(int pid);
 
 
 /* -------------------------- Globals ------------------------------------- */
@@ -36,6 +37,7 @@ proc_struct ProcTable[MAXPROC];
 /* Process lists  */
 proc_ptr ReadyList;
 proc_ptr BlockedList;
+proc_ptr ZapperList;
 
 /* current process ID */
 proc_ptr Current;
@@ -74,7 +76,11 @@ void startup()
       ProcTable[i].stack = NULL;
       ProcTable[i].stacksize = 0;
       ProcTable[i].status = EMPTY;
+<<<<<<< HEAD
       ProcTable[i].exit_status = NULL;
+=======
+      ProcTable[i].z_status = NONE;
+>>>>>>> Cris-patch-1
    }  
    
    /* Initialize the Ready list, etc. */
@@ -82,6 +88,7 @@ void startup()
       console("startup(): initializing the Ready & Blocked lists\n");
    ReadyList = NULL;
    BlockedList = NULL;
+   ZapperList = NULL;
    Current = NULL;
 
    /* Initialize the clock interrupt handler */
@@ -258,6 +265,11 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
    /* for future phase(s) */
    //p1_fork(ProcTable[proc_slot].pid);
 
+  if(Current != NULL)
+  {
+    Current->child_proc_ptr = &ProcTable[proc_slot];
+  }
+
   // Avoid calling sentinel
   if(strcmp(ProcTable[proc_slot].name, "sentinel"))
   { 
@@ -314,6 +326,7 @@ void launch()
 int join(int *code)
 {
   if(Current->child_proc_ptr == EMPTY)
+<<<<<<< HEAD
      return -2;
    
    //Check if parent is zapped 
@@ -326,6 +339,21 @@ int join(int *code)
 
   *code = Current->child_proc_ptr->exit_status;
 
+=======
+    return -2;
+
+  //Check if parent is zapped
+  // If yes, return -1
+  if(Current->z_status == TRUE)
+    return -1;
+  
+  //EMPTY vs QUIT?
+  while(Current->child_proc_ptr->status != EMPTY)
+    waitint();
+
+  if(Current->child_proc_ptr == EMPTY)
+    return Current->child_proc_ptr->pid;
+>>>>>>> Cris-patch-1
 
   console("join(): Should not see this!");
   return 0;
@@ -343,6 +371,7 @@ int join(int *code)
    ------------------------------------------------------------------------ */
 void quit(int code)
 {
+<<<<<<< HEAD
    if(Current->child_proc_ptr != EMPTY)
    {
       console("quit(): Child processes are active");
@@ -353,6 +382,19 @@ void quit(int code)
    }
 
    console("QUIT\n");
+=======
+  proc_ptr temp = Current->child_proc_ptr;
+
+  console("IN QUIT\n");
+  if(temp->child_proc_ptr != EMPTY)
+  {
+    console("quit(): Child processes are active");
+    halt(1);
+  }
+  else{
+    temp->status = EMPTY;
+  }
+>>>>>>> Cris-patch-1
 
    p1_quit(Current->pid);
 } /* quit */
@@ -480,6 +522,53 @@ static void check_deadlock()
       halt(0);
 
 } /* check_deadlock */
+
+int zap(int pid)
+{
+  int proc_slot = 0;
+  proc_ptr walker = NULL;
+
+  //for loop to iterate through proc_list to find PID to zap
+  for(int i = 0; i < MAXPROC; i++)
+  {
+    if(ProcTable[i].pid == pid)
+      proc_slot = i;
+  }
+
+  //If statement to assure zapping only occurs if pid is actually found in the
+  //process table
+  if(proc_slot != 0)
+  {
+    //change z_status of newly found pid process to zapped
+    ProcTable[proc_slot].z_status = ZAPPED;
+    //change z_status of current process to zapper
+    Current->z_status = ZAPPER;
+    Current->z_pid = ProcTable[proc_slot].pid;
+    //add current process to ZapperList
+    if(ZapperList == NULL)
+      ZapperList = Current;
+    else
+    {
+      //iterate through ZapperList and add itself to the end
+      walker = ZapperList;
+      while(walker->next_proc_ptr != NULL)
+      {
+        walker = walker->next_proc_ptr;
+      }
+
+      walker->next_proc_ptr = Current;
+    }
+    
+    //change status of current process to BLOCKED
+    Current->status = BLOCKED;
+    //call dispatcher
+    dispatcher();
+  }
+
+  //to supress warning for now
+  return 0;
+
+}
 
 /* ------------------------------------------------------------------------
  * Name - enableInterrupets
