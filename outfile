@@ -1,20 +1,14 @@
 starting test 00 ....
 
-startup(): Should not see this message! Returned from fork1 call that created start1
-SIMULATOR TRAP: startup returned!
-
+./test00: Command not found.
 
 starting test 01 ....
 
-startup(): Should not see this message! Returned from fork1 call that created start1
-SIMULATOR TRAP: startup returned!
-
+./test01: Command not found.
 
 starting test 02 ....
 
-startup(): Should not see this message! Returned from fork1 call that created start1
-SIMULATOR TRAP: startup returned!
-
+./test02: Command not found.
 
 starting test 03 ....
 
@@ -34,21 +28,15 @@ starting test 06 ....
 
 starting test 07 ....
 
-startup(): Should not see this message! Returned from fork1 call that created start1
-SIMULATOR TRAP: startup returned!
-
+./test07: Command not found.
 
 starting test 08 ....
 
-startup(): Should not see this message! Returned from fork1 call that created start1
-SIMULATOR TRAP: startup returned!
-
+./test08: Command not found.
 
 starting test 09 ....
 
-startup(): Should not see this message! Returned from fork1 call that created start1
-SIMULATOR TRAP: startup returned!
-
+./test09: Command not found.
 
 starting test 10 ....
 
@@ -56,15 +44,11 @@ starting test 10 ....
 
 starting test 11 ....
 
-startup(): Should not see this message! Returned from fork1 call that created start1
-SIMULATOR TRAP: startup returned!
-
+./test11: Command not found.
 
 starting test 12 ....
 
-startup(): Should not see this message! Returned from fork1 call that created start1
-SIMULATOR TRAP: startup returned!
-
+./test12: Command not found.
 
 starting test 13 ....
 
@@ -84,9 +68,7 @@ starting test 16 ....
 
 starting test 17 ....
 
-startup(): Should not see this message! Returned from fork1 call that created start1
-SIMULATOR TRAP: startup returned!
-
+./test17: Command not found.
 
 starting test 18 ....
 
@@ -94,15 +76,11 @@ starting test 18 ....
 
 starting test 19 ....
 
-startup(): Should not see this message! Returned from fork1 call that created start1
-SIMULATOR TRAP: startup returned!
-
+./test19: Command not found.
 
 starting test 20 ....
 
-startup(): Should not see this message! Returned from fork1 call that created start1
-SIMULATOR TRAP: startup returned!
-
+./test20: Command not found.
 
 starting test 21 ....
 
@@ -110,9 +88,7 @@ starting test 21 ....
 
 starting test 22 ....
 
-startup(): Should not see this message! Returned from fork1 call that created start1
-SIMULATOR TRAP: startup returned!
-
+./test22: Command not found.
 
 starting test 23 ....
 
