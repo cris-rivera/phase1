@@ -343,15 +343,16 @@ int join(int *code)
    ------------------------------------------------------------------------ */
 void quit(int code)
 {
-   if(Current->child_proc_ptr->child_proc_ptr != EMPTY)
+   if(Current->child_proc_ptr != EMPTY)
    {
       console("quit(): Child processes are active");
       halt(1);
    }
    else{
-      Current->child_proc_ptr->exit_status = code;
+      Current->exit_status = code;
    }
 
+   console("QUIT\n");
 
    p1_quit(Current->pid);
 } /* quit */
