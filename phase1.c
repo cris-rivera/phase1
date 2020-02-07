@@ -27,6 +27,7 @@ int zap(int pid);
 int check_io();
 void test_kernel_mode();
 int block_me(int new_status);
+int unblock_proc(int pid);
 
 
 /* -------------------------- Globals ------------------------------------- */
@@ -684,6 +685,27 @@ int block_me(int new_status)
 
   return 0;
 }
+
+int unblock_proc(int pid)
+{
+  proc_ptr walker = BlockedList;
+  while(walker->pid != pid && walker->next_proc_ptr != NULL)
+  {
+    walker = walker->next_proc_ptr;
+  }
+
+  if(walker->status != BLOCKED || walker == Current || walker->status <= 10 || walker->pid != pid)
+    return -2;
+
+  if(Current->z_status == ZAPPED)
+    return -1;
+
+  walker->status = READY;
+  RdyList_Insert(walker);
+  dispatcher();
+
+  return 0;
+}  
 
 /* Unifished Clock handler
 
