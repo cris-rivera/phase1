@@ -26,6 +26,7 @@ void dump_processes();
 int zap(int pid);
 int check_io();
 void test_kernel_mode();
+int block_me(int new_status);
 
 
 /* -------------------------- Globals ------------------------------------- */
@@ -357,7 +358,7 @@ int join(int *code)
 
   //I think this either needs to say "child_proc_ptr->status == DEAD", or "child_proc_ptr
   //== NULL.
-  if(Current->child_proc_ptr == EMPTY)
+  if(Current->child_proc_ptr->status == DEAD)
     return Current->child_proc_ptr->pid;
 
   console("join(): Should not see this!");
@@ -657,6 +658,31 @@ void test_kernel_mode()
        console("fork1(): not in kernel mode");
        halt(1);
   }
+}
+
+int block_me(int new_status)
+{
+  proc_ptr walker = BlockedList;
+
+  if(new_status <= 10)
+  {
+    console("Error: invalid status.\n");
+    halt(1);
+  }
+
+  if(Current->z_status == ZAPPED)
+    return -1;
+
+  Current->status = BLOCKED;
+  while(walker->next_proc_ptr != NULL)
+  {
+    walker = walker->next_proc_ptr;
+  }
+
+  walker->next_proc_ptr = Current;
+  dispatcher();
+
+  return 0;
 }
 
 /* Unifished Clock handler

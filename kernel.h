@@ -38,12 +38,13 @@ union psr_values {
    unsigned int integer_part;
 };
 
+//used as parameter of block_me(new_status), which must be larger than 10?
 enum {
-  EMPTY,
-  DEAD,
-  BLOCKED,
-  READY,
-  RUNNING
+  EMPTY = 11, 
+  DEAD,       //12
+  BLOCKED,    //13
+  READY,      //14
+  RUNNING     //15
 } status_code;
 
 enum {
