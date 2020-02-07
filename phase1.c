@@ -20,7 +20,7 @@ void dispatcher(void);
 void launch();
 static void enableInterrupts();
 static void check_deadlock();
-void RdyList_Insert(proc_ptr process);
+static void RdyList_Insert(proc_ptr process);
 int getpid();
 void dump_processes();
 int zap(int pid);
@@ -142,46 +142,33 @@ void finish()
 115    Returns - nothing
 116    Side Effects - ReadyList has a new addition in a sorted place.
 117    ----------------------------------------------------------------------- */
-void RdyList_Insert(proc_ptr process)
+static void RdyList_Insert(proc_ptr process)
 {
   test_kernel_mode();
 
-  proc_ptr walker = NULL;
-
-  if(ReadyList == NULL)
+  proc_ptr walker, previous;
+  previous = NULL;
+  walker = ReadyList;
+  while(walker != NULL && walker->priority <= process->priority)
   {
-     ReadyList = process;
+    previous = walker;
+    walker = walker->next_proc_ptr;
   }
 
-  if(process->priority < ReadyList->priority)
+  if(previous == NULL)
   {
-     process->next_proc_ptr = ReadyList;
-     ReadyList = process;
+    //process goes at the front of ReadyList
+    process->next_proc_ptr = ReadyList;
+    ReadyList = process;
   }
   else
   {
-     walker = ReadyList->next_proc_ptr;
-     while(walker != NULL)
-     {
-       if(process->priority < walker->priority)
-       {
-         process->next_proc_ptr = walker;
-         walker = ReadyList;
-       }
-
-       if(walker->next_proc_ptr == process->next_proc_ptr)
-       {
-         walker->next_proc_ptr = process;
-       }
-       else
-       {
-         walker = walker->next_proc_ptr;
-       }
-
-     }
+    //process goes after previous
+    previous->next_proc_ptr = process;
+    process->next_proc_ptr = walker;
   }
-
-}
+  return;
+}/* RdyList_Insert*/
 
 /* ------------------------------------------------------------------------
    Name - fork1
@@ -278,7 +265,6 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
   }
 
   enableInterrupts();
-  console("IN FORK\n");
   return ProcTable[proc_slot].pid;
 
 } /* fork1 */
@@ -380,7 +366,7 @@ void quit(int code)
 {
    test_kernel_mode();
    proc_ptr child_ptr = Current->child_proc_ptr;
-   console("QUIT222\n");
+   
    //added this if statement because not every process will have a child, and
    //it was causing a segmentation fault to not check because it was trying to
    //check the status of a structure held within a NULL address, which
@@ -404,6 +390,7 @@ void quit(int code)
     //empty. 
     Current->status = DEAD;
     Current->exit_status = code;
+    dispatcher();
 
    p1_quit(Current->pid);
 } /* quit */
@@ -463,20 +450,13 @@ void dispatcher(void)
     next_process = ReadyList;
     ReadyList = ReadyList->next_proc_ptr;
     next_process->next_proc_ptr = NULL;
-
-    walker = ReadyList;
-    while(walker->next_proc_ptr != NULL)
-    {
-      walker = walker->next_proc_ptr;
-    }
-
-    walker->next_proc_ptr = Current;
     
+    RdyList_Insert(Current);
     Current->status = READY;
     walker = Current;
 
     Current = next_process;
-    Current->status = RUNNING;
+    Current->status = RUNNING; 
     context_switch(&walker->state, &Current->state);
 
   }
@@ -700,6 +680,8 @@ int unblock_proc(int pid)
   if(Current->z_status == ZAPPED)
     return -1;
 
+  //TODO delete unblocked process from BlockedList
+  
   walker->status = READY;
   RdyList_Insert(walker);
   dispatcher();

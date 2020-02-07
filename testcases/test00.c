@@ -30,8 +30,6 @@ int XXp1(char *arg)
   for(i = 0; i < 100; i++)
     ;
 
-  console("hey\n");
-  quit(-3);
-  console("ho!\n");
+  quit(-3);  
   return 0;
 }
