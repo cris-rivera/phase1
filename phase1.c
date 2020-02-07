@@ -42,6 +42,7 @@ proc_struct ProcTable[MAXPROC];
 proc_ptr ReadyList;
 proc_ptr BlockedList;
 proc_ptr ZapperList;
+proc_ptr DeadList;
 
 /* current process ID */
 proc_ptr Current;
@@ -90,6 +91,7 @@ void startup()
    ReadyList = NULL;
    BlockedList = NULL;
    ZapperList = NULL;
+   DeadList = NULL;
    Current = NULL;
 
    /* Initialize the clock interrupt handler */
@@ -323,7 +325,7 @@ int join(int *code)
    
    //Check if parent is zapped 
    // If yes, return -1
-
+  
   while(Current->child_proc_ptr->exit_status == -1)
   {
      //sleep? 
@@ -342,7 +344,7 @@ int join(int *code)
   //EMPTY vs QUIT?
   while(Current->child_proc_ptr->status != DEAD)
     waitint();
-
+    
   //I think this either needs to say "child_proc_ptr->status == DEAD", or "child_proc_ptr
   //== NULL.
   if(Current->child_proc_ptr->status == DEAD)
@@ -441,6 +443,19 @@ void dispatcher(void)
     Current->status = RUNNING;
     context_switch(&walker->state, &Current->state);
 
+  }
+  else if(Current->status == DEAD)
+  {
+    next_process = ReadyList;
+    ReadyList = ReadyList->next_proc_ptr;
+    next_process->next_proc_ptr = NULL;
+
+    DeadList = Current;
+    walker = Current;
+
+    Current = next_process;
+    Current->status = RUNNING;
+    context_switch(&walker->state, &Current->state);
   }
   else
   {
