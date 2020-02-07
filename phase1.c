@@ -24,6 +24,8 @@ void RdyList_Insert(proc_ptr process);
 int getpid();
 void dump_processes();
 int zap(int pid);
+int check_io();
+void test_kernel_mode();
 
 
 /* -------------------------- Globals ------------------------------------- */
@@ -126,6 +128,7 @@ void startup()
    ----------------------------------------------------------------------- */
 void finish()
 {
+   test_kernel_mode();
    if (DEBUG && debugflag)
       console("in finish...\n");
 } /* finish */
@@ -139,7 +142,8 @@ void finish()
 117    ----------------------------------------------------------------------- */
 void RdyList_Insert(proc_ptr process)
 {
-  
+  test_kernel_mode();
+
   proc_ptr walker = NULL;
 
   if(ReadyList == NULL)
@@ -199,10 +203,8 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
       console("fork1(): creating process %s\n", name);
 
    /* test if in kernel mode; halt if in user mode */
-  if((PSR_CURRENT_MODE & psr_get()) == 0){
-      console("fork1(): not in kernel mode");
-      halt(1);
-   }
+   test_kernel_mode();
+
    /* Return if stack size is too small */
    if(stacksize < USLOSS_MIN_STACK){
       console("fork1(): stack size too small");
@@ -220,7 +222,7 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
    /* Return if process table is full */
    if(pid_count >= MAXPROC)
    {
-      //enableInterrupts();
+      enableInterrupts();
       if(DEBUG && debugflag)
       {
         console("fork1(): process table full\n");
@@ -289,6 +291,7 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
    ------------------------------------------------------------------------ */
 void launch()
 {
+   test_kernel_mode();
    int result;
 
    if (DEBUG && debugflag)
@@ -322,8 +325,12 @@ void launch()
    ------------------------------------------------------------------------ */
 int join(int *code)
 {
-  console("in join()");
-  if(Current->child_proc_ptr == EMPTY)
+  test_kernel_mode();
+  //child process pointer should never use EMPTY that is for its status not 
+  //its address. If a child was never there or a child gets taken off the
+  //parent-child relationship, then the child process pointer should be made
+  //NULL not EMPTY.
+  if(Current->child_proc_ptr == NULL)
      return -2;
    
    //Check if parent is zapped 
@@ -335,6 +342,23 @@ int join(int *code)
   }
 
   *code = Current->child_proc_ptr->exit_status;
+
+  //Why is this here?
+  //return -2;
+
+  //check if parent is zapped
+  //if yes, return -1
+  if(Current->z_status == ZAPPED)
+    return -1;
+
+  //EMPTY vs QUIT?
+  while(Current->child_proc_ptr->status != DEAD)
+    waitint();
+
+  //I think this either needs to say "child_proc_ptr->status == DEAD", or "child_proc_ptr
+  //== NULL.
+  if(Current->child_proc_ptr == EMPTY)
+    return Current->child_proc_ptr->pid;
 
   console("join(): Should not see this!");
   return 0;
@@ -352,18 +376,32 @@ int join(int *code)
    ------------------------------------------------------------------------ */
 void quit(int code)
 {
-   if(Current->child_proc_ptr != EMPTY)
+   test_kernel_mode();
+   proc_ptr child_ptr = Current->child_proc_ptr;
+   console("QUIT222\n");
+   //added this if statement because not every process will have a child, and
+   //it was causing a segmentation fault to not check because it was trying to
+   //check the status of a structure held within a NULL address, which
+   //obviously does not exist.
+   if(child_ptr != NULL)
    {
+    //This should be checking the status of the child process not the value of
+    //the pointer. The status is held in its own variable, but the
+    //child_proc_ptr only hold the address of the child process.
+    if(child_ptr->status != DEAD)
+    {
       console("quit(): Child processes are active");
       halt(1);
+    }
    }
-   else{
-      Current->exit_status = code;
-      Current->status = BLOCKED;
-      console("Exit Code: %d\n", code);
-   }
-
-   console("QUIT\n");
+    //else statement was unnecessary, if there is a running child process
+    //active it will halt and never reach any of the following code. If there
+    //is not a running process, then it can reach this code and execute it
+    //without problem.
+    //Changed this to DEAD to signify that the process is dead instead of
+    //empty. 
+    Current->status = DEAD;
+    Current->exit_status = code;
 
    p1_quit(Current->pid);
 } /* quit */
@@ -381,6 +419,7 @@ void quit(int code)
    ----------------------------------------------------------------------- */
 void dispatcher(void)
 {
+   test_kernel_mode();
    proc_ptr next_process = NULL;
    proc_ptr walker = NULL;
    
@@ -456,6 +495,7 @@ void dispatcher(void)
    ----------------------------------------------------------------------- */
 int sentinel (char * dummy)
 {
+   test_kernel_mode();
    if (DEBUG && debugflag)
       console("sentinel(): called\n");
    while (1)
@@ -469,12 +509,11 @@ int sentinel (char * dummy)
 /* check to determine if deadlock has occurred... */
 static void check_deadlock()
 {
-   /* Gotta figure out where check_io is 
-
+   test_kernel_mode();
+   //check_io() is a dummy function that just returns 0 during this phase.
+   //I added its definition towards the end of this code. 
    if(check_io() == 1)
       return;
-
-   */
   
    //Check the number of living processes
    int process_count = 0;
@@ -494,6 +533,7 @@ static void check_deadlock()
 
 int zap(int pid)
 {
+  test_kernel_mode();
   int proc_slot = 0;
   proc_ptr walker = NULL;
 
@@ -577,11 +617,13 @@ void disableInterrupts()
 
 int getpid()
 {
+  test_kernel_mode();
   return Current->pid;
 }
 
 void dump_processes()
 {
+  test_kernel_mode();
   int i = 0;
   proc_ptr walker = &ProcTable[i];
 
@@ -596,6 +638,24 @@ void dump_processes()
     console("Children: \n\n");
     i += i;
     walker = &ProcTable[i];
+  }
+}
+
+//This is a dummy function that we must include just so check_deadlock() works.
+//We will implement it at a later phase, but Professor Xu told us to include it 
+//now as a dummy function.
+int check_io()
+{
+  test_kernel_mode();
+  return 0;
+}
+
+void test_kernel_mode()
+{
+  if((PSR_CURRENT_MODE & psr_get()) == 0)
+  {
+       console("fork1(): not in kernel mode");
+       halt(1);
   }
 }
 

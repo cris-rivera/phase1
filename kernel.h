@@ -40,6 +40,7 @@ union psr_values {
 
 enum {
   EMPTY,
+  DEAD,
   BLOCKED,
   READY,
   RUNNING
