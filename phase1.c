@@ -621,20 +621,28 @@ int getpid()
 void dump_processes()
 {
   test_kernel_mode();
-  int i = 0;
-  proc_ptr walker = &ProcTable[i];
+  int i;
 
-  while(walker->pid != -1)
+  for(i = 0; i < MAXPROC; i++)
   {
-    console("Name: \n");
-    console("PID: %d\n", walker->pid);
-    console("Priority: %d\n", walker->priority);
-    console("Status: \n");
+    console("Name: %s\n", ProcTable[i].name);
+    console("PID: %d\n", ProcTable[i].pid);
+    console("Priority: %d\n", ProcTable[i].priority);
     console("CPU Time: \n");
     console("Parent's PID: \n");
-    console("Children: \n\n");
-    i += i;
-    walker = &ProcTable[i];
+    console("Children: %s\n\n", ProcTable[i].child_proc_ptr->name);
+
+    if(ProcTable[i].status == EMPTY)
+      console("Status: Empty\n");
+    else if(ProcTable[i].status == DEAD)
+      console("Status: Dead\n");
+    else if(ProcTable[i].status == BLOCKED)
+      console("Status: Blocked\n");
+    else if(ProcTable[i].status == READY)
+      console("Status: Ready\n");
+    else if(ProcTable[i].status == RUNNING)
+      console("Status: Running\n");
+    
   }
 }
 

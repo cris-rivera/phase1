@@ -1,32 +1,163 @@
 starting test 00 ....
 
-startup(): Should not see this message! Returned from fork1 call that created start1
-SIMULATOR TRAP: startup returned!
-
+start1(): started
+XXp1(): started
+XXp1(): arg = `XXp1'
+start1(): after fork of child 3
+start1(): performing join
+start1(): exit status for child 3 is -3
 
 starting test 01 ....
 
-startup(): Should not see this message! Returned from fork1 call that created start1
-SIMULATOR TRAP: startup returned!
-
+start1(): started
+XXp1(): started
+XXp1(): arg = `XXp1'
+start1(): after fork of child 3
+XXp2(): started
+XXp2(): arg = `XXp2'
+start1(): after fork of child 4
+start1(): performing first join
+start1(): exit status for child 4 is 5
+start1(): performing second join
+start1(): exit status for child 4 is 5
 
 starting test 02 ....
 
-startup(): Should not see this message! Returned from fork1 call that created start1
-SIMULATOR TRAP: startup returned!
+SIMULATOR TRAP: USLOSS_IntVec[USLOSS_CLOCK_INT] is NULL!
 
+start1(): started
+XXp1(): started
+XXp1(): arg = `XXp1'
+XXp1(): executing fork of first child
+start1(): after fork of child 3
+start1(): performing join
 
 starting test 03 ....
 
-./test03: Command not found.
+start1(): started
+XXp1(): started, pid = 3
+XXp1(): arg = `XXp1'
+XXp1(): executing fork of first child
+start1(): after fork of child 3
+start1(): performing join
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: 
 
 starting test 04 ....
 
-./test04: Command not found.
+start1(): started
+XXp1(): started, pid = 3
+start1(): after fork of child 3
+XXp1(): started, pid = 4
+start1(): after fork of child 4
+XXp1(): started, pid = 5
+start1(): after fork of child 5
+XXp1(): started, pid = 6
+start1(): after fork of child 6
+XXp1(): started, pid = 7
+start1(): after fork of child 7
+XXp1(): started, pid = 8
+start1(): after fork of child 8
+XXp1(): started, pid = 9
+start1(): after fork of child 9
+XXp1(): started, pid = 10
+start1(): after fork of child 10
+XXp1(): started, pid = 11
+start1(): after fork of child 11
+XXp1(): started, pid = 12
+start1(): after fork of child 12
+XXp1(): started, pid = 13
+start1(): after fork of child 13
+XXp1(): started, pid = 14
+start1(): after fork of child 14
+XXp1(): started, pid = 15
+start1(): after fork of child 15
+XXp1(): started, pid = 16
+start1(): after fork of child 16
+XXp1(): started, pid = 17
+start1(): after fork of child 17
+XXp1(): started, pid = 18
+start1(): after fork of child 18
+XXp1(): started, pid = 19
+start1(): after fork of child 19
+XXp1(): started, pid = 20
+start1(): after fork of child 20
+XXp1(): started, pid = 21
+start1(): after fork of child 21
+XXp1(): started, pid = 22
+start1(): after fork of child 22
+XXp1(): started, pid = 23
+start1(): after fork of child 23
+XXp1(): started, pid = 24
+start1(): after fork of child 24
+XXp1(): started, pid = 25
+start1(): after fork of child 25
+XXp1(): started, pid = 26
+start1(): after fork of child 26
+XXp1(): started, pid = 27
+start1(): after fork of child 27
+XXp1(): started, pid = 28
+start1(): after fork of child 28
+XXp1(): started, pid = 29
+start1(): after fork of child 29
+XXp1(): started, pid = 30
+start1(): after fork of child 30
+XXp1(): started, pid = 31
+start1(): after fork of child 31
+XXp1(): started, pid = 32
+start1(): after fork of child 32
+XXp1(): started, pid = 33
+start1(): after fork of child 33
+XXp1(): started, pid = 34
+start1(): after fork of child 34
+XXp1(): started, pid = 35
+start1(): after fork of child 35
+XXp1(): started, pid = 36
+start1(): after fork of child 36
+XXp1(): started, pid = 37
+start1(): after fork of child 37
+XXp1(): started, pid = 38
+start1(): after fork of child 38
+XXp1(): started, pid = 39
+start1(): after fork of child 39
+XXp1(): started, pid = 40
+start1(): after fork of child 40
+XXp1(): started, pid = 41
+start1(): after fork of child 41
+XXp1(): started, pid = 42
+start1(): after fork of child 42
+XXp1(): started, pid = 43
+start1(): after fork of child 43
+XXp1(): started, pid = 44
+start1(): after fork of child 44
+XXp1(): started, pid = 45
+start1(): after fork of child 45
+XXp1(): started, pid = 46
+start1(): after fork of child 46
+XXp1(): started, pid = 47
+start1(): after fork of child 47
+XXp1(): started, pid = 48
+start1(): after fork of child 48
+XXp1(): started, pid = 49
+start1(): after fork of child 49
+XXp1(): started, pid = 50
+start1(): after fork of child 50
+Name: XXp1
+PID: 50
+Priority: 3
+CPU Time: 
+Parent's PID: 
 
 starting test 05 ....
 
-./test05: Command not found.
+SIMULATOR TRAP: USLOSS_IntVec[USLOSS_CLOCK_INT] is NULL!
+
+start1(): started
+start1(): buf = `XXp2'
+XXp1(): XXp2, started, pid = 3
 
 starting test 06 ....
 
@@ -34,89 +165,121 @@ starting test 06 ....
 
 starting test 07 ....
 
-startup(): Should not see this message! Returned from fork1 call that created start1
-SIMULATOR TRAP: startup returned!
+SIMULATOR TRAP: USLOSS_IntVec[USLOSS_CLOCK_INT] is NULL!
 
+start1(): started
+XXp1(): started
+XXp1(): arg = `XXp1'
+start1(): after fork of child 3
 
 starting test 08 ....
 
-startup(): Should not see this message! Returned from fork1 call that created start1
-SIMULATOR TRAP: startup returned!
+SIMULATOR TRAP: USLOSS_IntVec[USLOSS_CLOCK_INT] is NULL!
 
+start1(): started
+XXp1(): started
+XXp1(): arg = `XXp1'
+XXp1(): executing fork of first child
+start1(): after fork of child 3
+start1(): performing join
 
 starting test 09 ....
 
-startup(): Should not see this message! Returned from fork1 call that created start1
-SIMULATOR TRAP: startup returned!
-
+start1(): started
+XXp1(): started
+XXp1(): arg = `XXp1'
+start1(): after fork of child 3
 
 starting test 10 ....
 
-./test10: Command not found.
 
 starting test 11 ....
 
-startup(): Should not see this message! Returned from fork1 call that created start1
-SIMULATOR TRAP: startup returned!
-
+start1(): started
+fork1(): not in kernel modeSIMULATOR TRAP: privileged instruction (USLOSS halt)
 
 starting test 12 ....
 
-startup(): Should not see this message! Returned from fork1 call that created start1
-SIMULATOR TRAP: startup returned!
-
+start1(): started
+XXp1(): started
+XXp1(): arg = `XXp1'
+fork1(): not in kernel modeSIMULATOR TRAP: privileged instruction (USLOSS halt)
 
 starting test 13 ....
 
-./test13: Command not found.
+SIMULATOR TRAP: USLOSS_IntVec[USLOSS_CLOCK_INT] is NULL!
+
+start1(): started
+XXp1(): started
+XXp1(): arg = `XXp1'
+XXp1(): executing fork of first child
+start1(): after fork of child 3
+XXp1(): fork1 of first child returned pid = 4
+XXp1(): joining with first child
 
 starting test 14 ....
 
-./test14: Command not found.
+SIMULATOR TRAP: USLOSS_IntVec[USLOSS_CLOCK_INT] is NULL!
+
+start1(): started
+XXp1(): started
+XXp1(): arg = `XXp1'
+XXp1(): executing fork of first child
+start1(): after fork of child 3
+XXp1(): fork1 of first child returned pid = 4
+XXp1(): joining with first child
 
 starting test 15 ....
 
-./test15: Command not found.
 
 starting test 16 ....
 
-./test16: Command not found.
 
 starting test 17 ....
 
-startup(): Should not see this message! Returned from fork1 call that created start1
-SIMULATOR TRAP: startup returned!
-
+TEST:Getpid failed. 3 0
+TEST:Getpid failed. 4 0
+TEST:Getpid failed. 5 0
+TEST:exit getpid test.
 
 starting test 18 ....
 
-./test18: Command not found.
+SIMULATOR TRAP: USLOSS_IntVec[USLOSS_CLOCK_INT] is NULL!
+
+start1(): started
+XXp3(): started
 
 starting test 19 ....
 
-startup(): Should not see this message! Returned from fork1 call that created start1
-SIMULATOR TRAP: startup returned!
-
-
+fork1(): stack size too small
 starting test 20 ....
 
-startup(): Should not see this message! Returned from fork1 call that created start1
-SIMULATOR TRAP: startup returned!
-
+TEST:start 50 processes
+TEST:pid is -1.
+TEST:pid is -1.
+TEST:pid is -1.
+TEST:pid is -1.
 
 starting test 21 ....
 
-./test21: Command not found.
+start1(): started
+XXp1(): started
+XXp1(): arg = `XXp1'
+XXp1(): after zap'ing itself , status = 0
+start1(): after fork of child 3
+start1(): performing join
+start1(): exit status for child 3 is -3
 
 starting test 22 ....
 
-startup(): Should not see this message! Returned from fork1 call that created start1
-SIMULATOR TRAP: startup returned!
-
+start1(): started
 
 starting test 23 ....
 
-./test23: Command not found.
+SIMULATOR TRAP: USLOSS_IntVec[USLOSS_CLOCK_INT] is NULL!
+
+start1(): started
+XXp1(): creating children
 
 starting test 24 ....
 
