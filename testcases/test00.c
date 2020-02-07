@@ -10,6 +10,9 @@ int start1(char *arg)
 {
   int status, pid1, kidpid;
 
+  pid1 = 0;
+  status = 0;
+  kidpid = 0;
   printf("start1(): started\n");
   pid1 = fork1("XXp1", XXp1, "XXp1", USLOSS_MIN_STACK, 3);
   printf("start1(): after fork of child %d\n", pid1);

@@ -322,6 +322,7 @@ void launch()
    ------------------------------------------------------------------------ */
 int join(int *code)
 {
+  console("in join()");
   if(Current->child_proc_ptr == EMPTY)
      return -2;
    
@@ -358,6 +359,8 @@ void quit(int code)
    }
    else{
       Current->exit_status = code;
+      Current->status = BLOCKED;
+      console("Exit Code: %d\n", code);
    }
 
    console("QUIT\n");
