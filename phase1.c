@@ -652,23 +652,26 @@ void dump_processes()
 
   for(i = 0; i < MAXPROC; i++)
   {
-    console("Name: %s\n", ProcTable[i].name);
-    console("PID: %d\n", ProcTable[i].pid);
-    console("Priority: %d\n", ProcTable[i].priority);
-    console("CPU Time: \n");
-    console("Parent's PID: \n");
-    console("Children: %s\n\n", ProcTable[i].child_proc_ptr->name);
+    if(ProcTable[i].pid != -1)
+    { 
+      console("Name: %s\n", ProcTable[i].name);
+      console("PID: %d\n", ProcTable[i].pid);
+      console("Priority: %d\n", ProcTable[i].priority);
+      console("CPU Time: \n");
+      //console("Parent's PID: %d\n", p_pid);
+      //console("Children: %s\n\n", child_name);
 
-    if(ProcTable[i].status == EMPTY)
-      console("Status: Empty\n");
-    else if(ProcTable[i].status == DEAD)
-      console("Status: Dead\n");
-    else if(ProcTable[i].status == BLOCKED)
-      console("Status: Blocked\n");
-    else if(ProcTable[i].status == READY)
-      console("Status: Ready\n");
-    else if(ProcTable[i].status == RUNNING)
-      console("Status: Running\n");
+      if(ProcTable[i].status == EMPTY)
+        console("Status: Empty\n\n");
+      else if(ProcTable[i].status == DEAD)
+        console("Status: Dead\n\n");
+      else if(ProcTable[i].status == BLOCKED)
+        console("Status: Blocked\n\n");
+      else if(ProcTable[i].status == READY)
+        console("Status: Ready\n\n");
+      else if(ProcTable[i].status == RUNNING)
+        console("Status: Running\n\n");
+    }
     
   }
 }
