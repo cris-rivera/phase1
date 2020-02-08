@@ -316,6 +316,7 @@ void launch()
 int join(int *code)
 {
   test_kernel_mode();
+  
   //child process pointer should never use EMPTY that is for its status not 
   //its address. If a child was never there or a child gets taken off the
   //parent-child relationship, then the child process pointer should be made
@@ -323,13 +324,12 @@ int join(int *code)
   if(Current->child_proc_ptr == NULL)
      return -2;
    
-   //Check if parent is zapped 
-   // If yes, return -1
-  
+  //not sure what this is for 
+  /*
   while(Current->child_proc_ptr->exit_status == -1)
   {
      //sleep? 
-  }
+  }*/
 
   *code = Current->child_proc_ptr->exit_status;
 
@@ -341,10 +341,19 @@ int join(int *code)
   if(Current->z_status == ZAPPED)
     return -1;
 
-  //EMPTY vs QUIT?
+  //if the child process has not quit yet, the parent process must block and
+  //wait for the child to quit(). Wait for an interrupt is okay but, the parent
+  //must block to allow to child to run and then quit, right?
   while(Current->child_proc_ptr->status != DEAD)
-    waitint();
-    
+  {
+    Current->status = BLOCKED;
+    dispatcher();
+    //I do not think we can use this until the clock interrupt handler is coded
+    //and the interrupt vector is initialized. We cannot do that until after we
+    //finish join so I think join's wait needs to be written without it. 
+    //waitint();
+  }
+
   //I think this either needs to say "child_proc_ptr->status == DEAD", or "child_proc_ptr
   //== NULL.
   if(Current->child_proc_ptr->status == DEAD)
@@ -430,18 +439,28 @@ void dispatcher(void)
     next_process = ReadyList;
     ReadyList = ReadyList->next_proc_ptr;
     next_process->next_proc_ptr = NULL;
-
-    walker = BlockedList;
-    while(walker->next_proc_ptr != NULL)
+    
+    if(BlockedList == NULL)
     {
-      walker = walker->next_proc_ptr;
+      BlockedList = Current;
+      Current = next_process;
+      Current->status = RUNNING;
+      context_switch(&BlockedList->state, &Current->state);
     }
+    else
+    {
+      walker = BlockedList;
+      while(walker->next_proc_ptr != NULL)
+      {
+        walker = walker->next_proc_ptr;
+      }
 
-    walker->next_proc_ptr = Current;
-    walker = Current;
-    Current = next_process;
-    Current->status = RUNNING;
-    context_switch(&walker->state, &Current->state);
+      walker->next_proc_ptr = Current;
+      walker = Current;
+      Current = next_process;
+      Current->status = RUNNING;
+      context_switch(&walker->state, &Current->state);
+    }
 
   }
   else if(Current->status == DEAD)
