@@ -71,6 +71,7 @@ void startup()
       ProcTable[i].next_proc_ptr = NULL;
       ProcTable[i].child_proc_ptr = NULL;
       ProcTable[i].next_sibling_ptr = NULL;
+      ProcTable[i].parent_proc_ptr = NULL;
       memset(ProcTable[i].name, 0, sizeof(ProcTable[i].name));
       memset(ProcTable[i].start_arg, 0, sizeof(ProcTable[i].start_arg));
       ProcTable[i].state.start = NULL;
@@ -258,6 +259,7 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
   if(Current != NULL)
   {
     Current->child_proc_ptr = &ProcTable[proc_slot];
+    ProcTable[proc_slot].parent_proc_ptr = Current;
   }
 
   // Avoid calling sentinel
@@ -377,6 +379,7 @@ void quit(int code)
 {
    test_kernel_mode();
    proc_ptr child_ptr = Current->child_proc_ptr;
+   proc_ptr parent_ptr = Current->parent_proc_ptr;
    
    //added this if statement because not every process will have a child, and
    //it was causing a segmentation fault to not check because it was trying to
@@ -401,6 +404,11 @@ void quit(int code)
     //empty. 
     Current->status = DEAD;
     Current->exit_status = code;
+    if(parent_ptr != NULL)
+    {
+      parent_ptr->status = READY;
+      RdyList_Insert(parent_ptr);
+    }
     dispatcher();
 
    p1_quit(Current->pid);
