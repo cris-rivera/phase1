@@ -652,7 +652,8 @@ void dump_processes()
   proc_ptr parent = NULL;
   proc_ptr child = NULL;
 
-  console("before for\n");
+  //just to make it look aesthetically pleasing.
+  console("\n");
 
   for(i = 0; i < MAXPROC; i++)
   {
