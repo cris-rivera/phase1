@@ -157,6 +157,8 @@ void finish()
 117    ----------------------------------------------------------------------- */
 static void RdyList_Insert(proc_ptr process)
 {
+
+	console("in readylist \n");
   test_kernel_mode();
 
   proc_ptr walker, previous;
@@ -197,6 +199,8 @@ static void RdyList_Insert(proc_ptr process)
    ------------------------------------------------------------------------ */
 int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
 {
+
+	console("in fork \n");
    int proc_slot = next_pid % MAXPROC;
    int pid_count = 0;
    proc_ptr proc_tbl_ptr = NULL;
@@ -327,6 +331,8 @@ void launch()
    ------------------------------------------------------------------------ */
 int join(int *code)
 {
+
+	console("in join \n");
   test_kernel_mode();
   
   //child process pointer should never use EMPTY that is for its status not 
@@ -387,7 +393,9 @@ int join(int *code)
    ------------------------------------------------------------------------ */
 void quit(int code)
 {
-   test_kernel_mode();
+   
+	console("in quit \n");
+	test_kernel_mode();
    proc_ptr child_ptr = Current->child_proc_ptr;
    proc_ptr parent_ptr = Current->parent_proc_ptr;
    
@@ -437,6 +445,8 @@ void quit(int code)
    ----------------------------------------------------------------------- */
 void dispatcher(void)
 {
+
+	console("in dispatcher \n");
    test_kernel_mode();
    proc_ptr next_process = NULL;
    proc_ptr walker = NULL;
@@ -529,6 +539,8 @@ void dispatcher(void)
    ----------------------------------------------------------------------- */
 int sentinel (char * dummy)
 {
+
+	console("in sentinel \n");
    test_kernel_mode();
    if (DEBUG && debugflag)
       console("sentinel(): called\n");
@@ -543,6 +555,8 @@ int sentinel (char * dummy)
 /* check to determine if deadlock has occurred... */
 static void check_deadlock()
 {
+	
+	console("in check_deadlock \n");
    test_kernel_mode();
    //check_io() is a dummy function that just returns 0 during this phase.
    //I added its definition towards the end of this code. 
@@ -567,6 +581,8 @@ static void check_deadlock()
 
 int zap(int pid)
 {
+	
+	console("in zap \n");
   test_kernel_mode();
   int proc_slot = 0;
   proc_ptr walker = NULL;
@@ -623,6 +639,7 @@ int zap(int pid)
 void enableInterrupts()
 {
   
+	console("in enableinterrupts \n");
   //if not in kernel mode...
   if((PSR_CURRENT_MODE & psr_get()) == 0){
     console("Kernel Error: Not in kernel mode. may not enable interrupts\n");
@@ -639,7 +656,9 @@ void enableInterrupts()
  */
 void disableInterrupts()
 {
-  /* turn the interrupts OFF iff we are in kernel mode */
+	  
+	console("in disableInterrupts \n");
+/* turn the interrupts OFF iff we are in kernel mode */
   if((PSR_CURRENT_MODE & psr_get()) == 0) {
     //not in kernel mode
     console("Kernel Error: Not in kernel mode, may not disable interrupts\n");
@@ -657,7 +676,7 @@ int getpid()
 
 void dump_processes()
 {
-  test_kernel_mode();
+	console("in  \n");
   int i;
   proc_ptr parent = NULL;
   proc_ptr child = NULL;
@@ -713,6 +732,8 @@ int check_io()
 
 void test_kernel_mode()
 {
+
+	console("in test_kernel_mode\n");
   if((PSR_CURRENT_MODE & psr_get()) == 0)
   {
        console("fork1(): not in kernel mode");
@@ -722,7 +743,9 @@ void test_kernel_mode()
 
 int block_me(int new_status)
 {
-  proc_ptr walker = BlockedList;
+  
+	console("in block_me\n");
+	proc_ptr walker = BlockedList;
 
   if(new_status <= 10)
   {
@@ -747,7 +770,9 @@ int block_me(int new_status)
 
 int unblock_proc(int pid)
 {
-  proc_ptr walker = BlockedList;
+  	
+	console("in unblock_proc\n");
+	proc_ptr walker = BlockedList;
   while(walker->pid != pid && walker->next_proc_ptr != NULL)
   {
     walker = walker->next_proc_ptr;
@@ -780,16 +805,21 @@ void clock_handler()
 int read_time(void)
 {
 	// Return system time in microseconds
+	
+	console("in read_time \n");
 	return sys_clock()/1000;
 }
 
 int read_cur_start_time(void)
 {
+	
+	console("In read_cur_start_time \n");
 	return Current->start_time;
 }
 
 void time_slice(void)
 {
+	console("in time_slice \n");
 	if(((read_time() - read_cur_start_time()) * 1000) >= 80){
 		Current->start_time = 0;
 		dispatcher();
