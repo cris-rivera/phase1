@@ -649,17 +649,32 @@ void dump_processes()
 {
   test_kernel_mode();
   int i;
+  proc_ptr parent = NULL;
+  proc_ptr child = NULL;
+
+  console("before for\n");
 
   for(i = 0; i < MAXPROC; i++)
   {
+    parent = ProcTable[i].parent_proc_ptr;
+    child = ProcTable[i].child_proc_ptr;
+    
     if(ProcTable[i].pid != -1)
     { 
       console("Name: %s\n", ProcTable[i].name);
       console("PID: %d\n", ProcTable[i].pid);
       console("Priority: %d\n", ProcTable[i].priority);
       console("CPU Time: \n");
-      //console("Parent's PID: %d\n", p_pid);
-      //console("Children: %s\n\n", child_name);
+
+      if(parent == NULL)
+        console("Parent's PID: No parent\n");
+      else
+        console("Parent PID: %lu\n", parent->pid);
+
+      if(child == NULL)
+        console("Child: No children\n");
+      else
+        console("Child: %s\n", child->name);
 
       if(ProcTable[i].status == EMPTY)
         console("Status: Empty\n\n");
