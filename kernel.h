@@ -10,6 +10,7 @@ struct proc_struct {
    proc_ptr       next_proc_ptr;
    proc_ptr       child_proc_ptr;
    proc_ptr       next_sibling_ptr;
+   proc_ptr       parent_proc_ptr;
    char           name[MAXNAME];     /* process's name */
    char           start_arg[MAXARG]; /* args passed to process */
    context        state;             /* current context for process */
@@ -22,7 +23,8 @@ struct proc_struct {
    int            exit_status;   
    int            z_status;       /* NONE, ZAPPED, ZAPPER. */
    short          z_pid;          /* pid of process zapped by this process */
-   /* other fields as needed... */
+   int 			  start_time;   
+/* other fields as needed... */
 };
 
 struct psr_bits {
@@ -38,11 +40,13 @@ union psr_values {
    unsigned int integer_part;
 };
 
+//used as parameter of block_me(new_status), which must be larger than 10?
 enum {
-  EMPTY,
-  BLOCKED,
-  READY,
-  RUNNING
+  EMPTY = 11, 
+  DEAD,       //12
+  BLOCKED,    //13
+  READY,      //14
+  RUNNING     //15
 } status_code;
 
 enum {
