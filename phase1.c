@@ -71,7 +71,8 @@ unsigned int next_pid = SENTINELPID;
    ----------------------------------------------------------------------- */
 void startup()
 {
-   int i;      /* loop index */
+   console("in startup\n");
+	int i;      /* loop index */
    int result; /* value returned by call to fork1() */
 
    /* initialize the process table */
@@ -454,6 +455,7 @@ void dispatcher(void)
   /* checks if there is a process currently running */
   if(Current == NULL)
   {
+	console("first dispatch func\n");
     next_process = ReadyList;
     ReadyList = ReadyList->next_proc_ptr;
     next_process->next_proc_ptr = NULL;
@@ -464,6 +466,8 @@ void dispatcher(void)
   }
   else if(Current->status == BLOCKED)
   {
+
+	console("second dispatch func\n");
     next_process = ReadyList;
     ReadyList = ReadyList->next_proc_ptr;
     next_process->next_proc_ptr = NULL;
@@ -493,6 +497,8 @@ void dispatcher(void)
   }
   else if(Current->status == DEAD)
   {
+	
+	console("third dispatch func\n");
     next_process = ReadyList;
     ReadyList = ReadyList->next_proc_ptr;
     next_process->next_proc_ptr = NULL;
@@ -509,7 +515,9 @@ void dispatcher(void)
    /* Sets top of ready list as next runnable process.
     * Sets the top of ready list to the next ready process.
     * disconnects next runnable process from ready list*/
-    next_process = ReadyList;
+    
+	console("outhh dispatch func\n");
+	next_process = ReadyList;
     ReadyList = ReadyList->next_proc_ptr;
     next_process->next_proc_ptr = NULL;
     
@@ -739,6 +747,7 @@ void test_kernel_mode()
        console("fork1(): not in kernel mode");
        halt(1);
   }
+	console("out of test kernel mode\n");
 }
 
 int block_me(int new_status)
