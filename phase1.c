@@ -200,6 +200,7 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
    int proc_slot = next_pid % MAXPROC;
    int pid_count = 0;
    proc_ptr proc_tbl_ptr = NULL;
+   proc_ptr walker = NULL;
 
    if (DEBUG && debugflag)
       console("fork1(): creating process %s\n", name);
@@ -261,16 +262,28 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
 
    ProcTable[proc_slot].status = READY;
    proc_tbl_ptr = &ProcTable[proc_slot];
-   console("name into ready list: %s\n", proc_tbl_ptr->name);
    RdyList_Insert(proc_tbl_ptr);
-   //ProcTable[proc_slot].status = READY;
    
    /* for future phase(s) */
    //p1_fork(ProcTable[proc_slot].pid);
 
+  //sets up Parent-Child relationship.
   if(Current != NULL)
   {
-    Current->child_proc_ptr = &ProcTable[proc_slot];
+    if(Current->child_proc_ptr == NULL) 
+      Current->child_proc_ptr = &ProcTable[proc_slot];
+    else if(Current->child_proc_ptr->next_sibling_ptr == NULL)
+        Current->child_proc_ptr->next_sibling_ptr = &ProcTable[proc_slot];
+    else
+    {
+      walker = Current->child_proc_ptr;
+      while(walker->next_sibling_ptr != NULL)
+      {
+        walker = walker->next_sibling_ptr;
+      }
+      walker->next_sibling_ptr = &ProcTable[proc_slot];
+    }
+
     ProcTable[proc_slot].parent_proc_ptr = Current;
   }
 
@@ -330,7 +343,7 @@ void launch()
 int join(int *code)
 {
   test_kernel_mode();
-  
+  proc_ptr temp = NULL;
   //child process pointer should never use EMPTY that is for its status not 
   //its address. If a child was never there or a child gets taken off the
   //parent-child relationship, then the child process pointer should be made
@@ -371,7 +384,9 @@ int join(int *code)
   if(Current->child_proc_ptr->status == DEAD)
   {
     *code = Current->child_proc_ptr->exit_status;
-    return Current->child_proc_ptr->pid;
+    temp = Current->child_proc_ptr;
+    Current->child_proc_ptr = temp->next_sibling_ptr;
+    return temp->pid;
   }
 
   console("join(): Should not see this!");
@@ -544,7 +559,7 @@ void dispatcher(void)
     context_switch(&walker->state, &Current->state);
 
   }
-  console("name in dispatcher: %s\n", Current->name);
+
    p1_switch(Current->pid, next_process->pid);
 } /* dispatcher */
 
