@@ -44,7 +44,6 @@ proc_struct ProcTable[MAXPROC];
 proc_ptr ReadyList;
 proc_ptr BlockedList;
 proc_ptr ZapperList;
-proc_ptr DeadList;
 
 /* current process ID */
 proc_ptr Current;
@@ -96,7 +95,6 @@ void startup()
    ReadyList = NULL;
    BlockedList = NULL;
    ZapperList = NULL;
-   DeadList = NULL;
    Current = NULL;
 
    /* Initialize the clock interrupt handler */
@@ -386,6 +384,8 @@ int join(int *code)
     *code = Current->child_proc_ptr->exit_status;
     temp = Current->child_proc_ptr;
     Current->child_proc_ptr = temp->next_sibling_ptr;
+    temp->status = EMPTY;
+    temp->next_sibling_ptr = NULL;
     return temp->pid;
   }
 
@@ -533,7 +533,6 @@ void dispatcher(void)
       ReadyList = ReadyList->next_proc_ptr;
       next_process->next_proc_ptr = NULL;
 
-      DeadList = Current;
       walker = Current;
 
       Current = next_process;
