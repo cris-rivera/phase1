@@ -23,14 +23,24 @@ start1(): exit status for child 4 is 5
 
 starting test 02 ....
 
-SIMULATOR TRAP: USLOSS_IntVec[USLOSS_CLOCK_INT] is NULL!
-
 start1(): started
 XXp1(): started
 XXp1(): arg = `XXp1'
 XXp1(): executing fork of first child
 start1(): after fork of child 3
 start1(): performing join
+second whatever the fuck
+Null
+XXp2(): started
+XXp2(): arg = `XXp2'
+XXp1(): fork1 of first child returned pid = 4
+XXp1(): executing fork of second child
+XXp2(): started
+XXp2(): arg = `XXp2'
+XXp1(): fork1 of second child returned pid = 5
+XXp1(): first join returned kid_pid = 5, status = 5
+XXp1(): second join returned kid_pid = 5, status = 5
+start1(): exit status for child 3 is -1
 
 starting test 03 ....
 
@@ -40,11 +50,51 @@ XXp1(): arg = `XXp1'
 XXp1(): executing fork of first child
 start1(): after fork of child 3
 start1(): performing join
-Name: 
-PID: -1
-Priority: 0
+
+Name: sentinel
+PID: 1
+Priority: 6
 CPU Time: 
-Parent's PID: 
+Parent's PID: No parent
+Child: No children
+Status: Ready
+
+Name: start1
+PID: 2
+Priority: 1
+CPU Time: 
+Parent's PID: No parent
+Child: XXp1
+Status: Running
+
+Name: XXp1
+PID: 3
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: XXp2a
+Status: Ready
+
+Name: XXp2a
+PID: 4
+Priority: 5
+CPU Time: 
+Parent PID: 3
+Child: No children
+Status: Ready
+
+second whatever the fuck
+Null
+XXp1(): fork1 of first child returned pid = 4
+XXp1(): executing fork of second child
+XXp2(): started, pid = 4
+XXp2(): arg = `XXp2'
+XXp1(): fork1 of second child returned pid = 5
+XXp1(): zap'ing first child
+XXp2(): started, pid = 5
+XXp2(): arg = `XXp2'
+XXp1(): after zap'ing first child, status = 0
+XXp1(): zap'ing second child
 
 starting test 04 ....
 
@@ -145,11 +195,952 @@ XXp1(): started, pid = 49
 start1(): after fork of child 49
 XXp1(): started, pid = 50
 start1(): after fork of child 50
+
 Name: XXp1
 PID: 50
 Priority: 3
 CPU Time: 
-Parent's PID: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: sentinel
+PID: 1
+Priority: 6
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Ready
+
+Name: start1
+PID: 2
+Priority: 1
+CPU Time: 
+Parent's PID: No parent
+Child: XXp1
+Status: Running
+
+Name: XXp1
+PID: 3
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 4
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 5
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 6
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 7
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 8
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 9
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 10
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 11
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 12
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 13
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 14
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 15
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 16
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 17
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 18
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 19
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 20
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 21
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 22
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 23
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 24
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 25
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 26
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 27
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 28
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 29
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 30
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 31
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 32
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 33
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 34
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 35
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 36
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 37
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 38
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 39
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 40
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 41
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 42
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 43
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 44
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 45
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 46
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 47
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 48
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 49
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+start1(): after fork of child -1
+
+Name: XXp1
+PID: 50
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: sentinel
+PID: 1
+Priority: 6
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Ready
+
+Name: start1
+PID: 2
+Priority: 1
+CPU Time: 
+Parent's PID: No parent
+Child: XXp1
+Status: Running
+
+Name: XXp1
+PID: 3
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 4
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 5
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 6
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 7
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 8
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 9
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 10
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 11
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 12
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 13
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 14
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 15
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 16
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 17
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 18
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 19
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 20
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 21
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 22
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 23
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 24
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 25
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 26
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 27
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 28
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 29
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 30
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 31
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 32
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 33
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 34
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 35
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 36
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 37
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 38
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 39
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 40
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 41
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 42
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 43
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 44
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 45
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 46
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 47
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 48
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+Name: XXp1
+PID: 49
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Dead
+
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
+start1(): after join of child 50, status = -50
 
 starting test 05 ....
 
@@ -165,16 +1156,19 @@ starting test 06 ....
 
 starting test 07 ....
 
-SIMULATOR TRAP: USLOSS_IntVec[USLOSS_CLOCK_INT] is NULL!
-
 start1(): started
 XXp1(): started
 XXp1(): arg = `XXp1'
 start1(): after fork of child 3
+second whatever the fuck
+Null
+XXp2(): started
+XXp2(): arg = `XXp2'
+XXp1(): after fork of child 4
+XXp1(): exit status for child 4 is 5
+start1(): exit status for child 3 is -1
 
 starting test 08 ....
-
-SIMULATOR TRAP: USLOSS_IntVec[USLOSS_CLOCK_INT] is NULL!
 
 start1(): started
 XXp1(): started
@@ -182,6 +1176,20 @@ XXp1(): arg = `XXp1'
 XXp1(): executing fork of first child
 start1(): after fork of child 3
 start1(): performing join
+second whatever the fuck
+Null
+XXp1(): fork1 of first child returned pid = 4
+XXp1(): executing fork of second child
+XXp2(): started
+XXp2(): arg = `XXp2'
+XXp1(): fork1 of second child returned pid = 5
+second whatever the fuck
+not null
+XXp2(): started
+XXp2(): arg = `XXp2'
+XXp1(): first join returned kid_pid = 5, status = -1
+XXp1(): second join returned kid_pid = 5, status = 5
+start1(): exit status for child 3 is -1
 
 starting test 09 ....
 
@@ -192,7 +1200,14 @@ start1(): after fork of child 3
 
 starting test 10 ....
 
-
+start1(): started
+XXp1(): started
+XXp1(): arg = `XXp1'
+XXp1(): about to zap parent -- should result in deadlock
+start1(): after fork of child 3
+start1(): performing join
+start1(): exit status for child -1 is -1
+quit(): Child processes are active
 starting test 11 ....
 
 start1(): started
@@ -207,8 +1222,6 @@ fork1(): not in kernel modeSIMULATOR TRAP: privileged instruction (USLOSS halt)
 
 starting test 13 ....
 
-SIMULATOR TRAP: USLOSS_IntVec[USLOSS_CLOCK_INT] is NULL!
-
 start1(): started
 XXp1(): started
 XXp1(): arg = `XXp1'
@@ -216,11 +1229,66 @@ XXp1(): executing fork of first child
 start1(): after fork of child 3
 XXp1(): fork1 of first child returned pid = 4
 XXp1(): joining with first child
+second whatever the fuck
+Null
+start1(): after fork of child 5
+start1(): performing join
+second whatever the fuck
+not null
+XXp2(): started
+XXp2(): zap'ing child with pid_e 
+XXp3(): started
+
+Name: sentinel
+PID: 1
+Priority: 6
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Ready
+
+Name: start1
+PID: 2
+Priority: 1
+CPU Time: 
+Parent's PID: No parent
+Child: XXp2
+Status: Blocked
+
+Name: XXp1
+PID: 3
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: XXp3
+Status: Blocked
+
+Name: XXp3
+PID: 4
+Priority: 5
+CPU Time: 
+Parent PID: 3
+Child: No children
+Status: Running
+
+Name: XXp2
+PID: 5
+Priority: 4
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Ready
+
+XXp1(): join returned kid_pid = 4, status = -1
+second whatever the fuck
+not null
+XXp2(): after zap'ing child with pid_e, status = 0
+start1(): exit status for child 5 is -1
+start1(): performing join
+start1(): exit status for child 5 is 5
 
 starting test 14 ....
 
-SIMULATOR TRAP: USLOSS_IntVec[USLOSS_CLOCK_INT] is NULL!
-
 start1(): started
 XXp1(): started
 XXp1(): arg = `XXp1'
@@ -228,12 +1296,201 @@ XXp1(): executing fork of first child
 start1(): after fork of child 3
 XXp1(): fork1 of first child returned pid = 4
 XXp1(): joining with first child
+second whatever the fuck
+Null
+start1(): after fork of child 5
+start1(): performing join
+second whatever the fuck
+not null
+XXp2(): started
+XXp2(): zap'ing process with pid_z 
+XXp3(): started
+
+Name: sentinel
+PID: 1
+Priority: 6
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Ready
+
+Name: start1
+PID: 2
+Priority: 1
+CPU Time: 
+Parent's PID: No parent
+Child: XXp2
+Status: Blocked
+
+Name: XXp1
+PID: 3
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: XXp3
+Status: Blocked
+
+Name: XXp3
+PID: 4
+Priority: 5
+CPU Time: 
+Parent PID: 3
+Child: No children
+Status: Running
+
+Name: XXp2
+PID: 5
+Priority: 4
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Ready
+
+XXp1(): join returned kid_pid = 4, status = -1
+second whatever the fuck
+not null
+XXp2(): after zap'ing process with pid_z, status = 0
+start1(): exit status for child 5 is -1
+start1(): performing join
+start1(): exit status for child 5 is 5
 
 starting test 15 ....
 
+start1(): started
+XXp1(): started
+XXp1(): arg = `XXp1'
+XXp1(): executing fork of first child
+start1(): after fork of child 3
+XXp1(): fork1 of first child returned pid = 4
+XXp1(): zap'ing process with pid_z 
+start1(): after fork of child 5
+start1(): performing join
+second whatever the fuck
+Null
+XXp1(): after zap'ing process with pid_z, status = 0
+XXp1(): joining with first child
+second whatever the fuck
+not null
+XXp2(): started
+XXp2(): zap'ing process with pid_z 
+XXp3(): started
+
+Name: sentinel
+PID: 1
+Priority: 6
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Ready
+
+Name: start1
+PID: 2
+Priority: 1
+CPU Time: 
+Parent's PID: No parent
+Child: XXp2
+Status: Blocked
+
+Name: XXp1
+PID: 3
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: XXp3
+Status: Blocked
+
+Name: XXp3
+PID: 4
+Priority: 5
+CPU Time: 
+Parent PID: 3
+Child: No children
+Status: Running
+
+Name: XXp2
+PID: 5
+Priority: 4
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Ready
+
+XXp1(): join returned kid_pid = 4, status = -1
+second whatever the fuck
+not null
+XXp2(): after zap'ing process with pid_z, status = 0
+start1(): exit status for child 5 is -1
+start1(): performing join
+start1(): exit status for child 5 is 5
 
 starting test 16 ....
 
+start1(): started
+XXp1(): started
+XXp1(): arg = `XXp1'
+XXp1(): executing fork of first child
+start1(): after fork of child 3
+XXp1(): fork1 of first child returned pid = 4
+XXp1(): zap'ing process with 4
+start1(): after fork of child 5
+start1(): performing join
+second whatever the fuck
+Null
+XXp1(): after zap'ing process with pid_z, status = 0
+XXp1(): joining with first child
+second whatever the fuck
+not null
+XXp2(): started
+XXp2(): zap'ing process with pid = 3 
+XXp3(): started
+
+Name: sentinel
+PID: 1
+Priority: 6
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Ready
+
+Name: start1
+PID: 2
+Priority: 1
+CPU Time: 
+Parent's PID: No parent
+Child: XXp2
+Status: Blocked
+
+Name: XXp1
+PID: 3
+Priority: 3
+CPU Time: 
+Parent PID: 2
+Child: XXp3
+Status: Blocked
+
+Name: XXp3
+PID: 4
+Priority: 5
+CPU Time: 
+Parent PID: 3
+Child: No children
+Status: Running
+
+Name: XXp2
+PID: 5
+Priority: 4
+CPU Time: 
+Parent PID: 2
+Child: No children
+Status: Ready
+
+XXp1(): join returned kid_pid = 4, status = -1
+second whatever the fuck
+not null
+XXp2(): after zap'ing process with pid = 3, status = 0
+start1(): exit status for child 5 is -1
+start1(): performing join
+start1(): exit status for child 5 is 5
 
 starting test 17 ....
 
@@ -265,10 +1522,7 @@ starting test 21 ....
 start1(): started
 XXp1(): started
 XXp1(): arg = `XXp1'
-XXp1(): after zap'ing itself , status = 0
-start1(): after fork of child 3
-start1(): performing join
-start1(): exit status for child 3 is -3
+Error: pid does not exist!
 
 starting test 22 ....
 
@@ -276,10 +1530,16 @@ start1(): started
 
 starting test 23 ....
 
-SIMULATOR TRAP: USLOSS_IntVec[USLOSS_CLOCK_INT] is NULL!
-
 start1(): started
 XXp1(): creating children
+second whatever the fuck
+Null
+XXp2(): started, pid = 4, calling block_me
+second whatever the fuck
+not null
+SIMULATOR TRAP: USLOSS_IntVec[USLOSS_CLOCK_INT] is NULL!
+
+XXp2(): started, pid = 5, calling block_me
 
 starting test 24 ....
 

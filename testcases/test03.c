@@ -50,6 +50,7 @@ int XXp1(char *arg)
   kid_pid2 = join(&status);
   printf("XXp1(): second join returned kid_pid = %d, status = %d\n",
           kid_pid2, status);
+
   quit(-3);
   return 0;
 } /* XXp1 */

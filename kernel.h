@@ -8,6 +8,7 @@ typedef struct proc_struct * proc_ptr;
 
 struct proc_struct {
    proc_ptr       next_proc_ptr;
+   proc_ptr       next_zapper_ptr;
    proc_ptr       child_proc_ptr;
    proc_ptr       next_sibling_ptr;
    proc_ptr       parent_proc_ptr;

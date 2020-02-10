@@ -28,6 +28,8 @@ int check_io();
 void test_kernel_mode();
 int block_me(int new_status);
 int unblock_proc(int pid);
+static void BlkList_Delete(proc_ptr process);
+static void ZprList_Delete(proc_ptr process);
 
 
 /* -------------------------- Globals ------------------------------------- */
@@ -69,6 +71,7 @@ void startup()
    for(i = 0; i < MAXPROC; i++)
    {
       ProcTable[i].next_proc_ptr = NULL;
+      ProcTable[i].next_zapper_ptr = NULL;
       ProcTable[i].child_proc_ptr = NULL;
       ProcTable[i].next_sibling_ptr = NULL;
       ProcTable[i].parent_proc_ptr = NULL;
@@ -334,8 +337,6 @@ int join(int *code)
      //sleep? 
   }*/
 
-  *code = Current->child_proc_ptr->exit_status;
-
   //Why is this here?
   //return -2;
 
@@ -356,11 +357,14 @@ int join(int *code)
     //finish join so I think join's wait needs to be written without it. 
     //waitint();
   }
-
+  
   //I think this either needs to say "child_proc_ptr->status == DEAD", or "child_proc_ptr
   //== NULL.
   if(Current->child_proc_ptr->status == DEAD)
+  {
+    *code = Current->child_proc_ptr->exit_status;
     return Current->child_proc_ptr->pid;
+  }
 
   console("join(): Should not see this!");
   return 0;
@@ -382,6 +386,7 @@ void quit(int code)
    proc_ptr child_ptr = Current->child_proc_ptr;
    proc_ptr parent_ptr = Current->parent_proc_ptr;
    proc_ptr walker = NULL;
+   proc_ptr temp = NULL;
    
    //added this if statement because not every process will have a child, and
    //it was causing a segmentation fault to not check because it was trying to
@@ -415,16 +420,23 @@ void quit(int code)
     if(Current->z_status == ZAPPED)
     {
       walker = ZapperList;
-      while(walker != NULL)
+      temp = BlockedList;
+      while(walker != NULL && temp != NULL)
       {
         if(walker->z_pid == Current->pid)
         {
-          walker->z_pid = -1;
-          walker->z_status = NONE;
-          walker->status = READY;
-          RdyList_Insert(walker);
+          temp = walker;
+          walker = walker->next_zapper_ptr;
+          temp->z_pid = -1;
+          temp->z_status = NONE;
+          ZprList_Delete(temp);
+          BlkList_Delete(temp);
+          temp->status = READY;
+          RdyList_Insert(temp);
         }
-        walker = walker->next_proc_ptr;
+        else
+          walker = walker->next_zapper_ptr;
+
       }
     }
 
@@ -463,14 +475,12 @@ void dispatcher(void)
   }
   else if(Current->status == BLOCKED)
   {
-    console("second whatever the fuck\n");
     next_process = ReadyList;
     ReadyList = ReadyList->next_proc_ptr;
     next_process->next_proc_ptr = NULL;
     
     if(BlockedList == NULL)
     {
-      console("Null\n");
       BlockedList = Current;
       Current = next_process;
       Current->status = RUNNING;
@@ -478,13 +488,11 @@ void dispatcher(void)
     }
     else
     {
-      console("not null\n");
       walker = BlockedList;
       while(walker->next_proc_ptr != NULL)
       {
         walker = walker->next_proc_ptr;
       }
-
       walker->next_proc_ptr = Current;
       walker = Current;
       Current = next_process;
@@ -524,6 +532,7 @@ void dispatcher(void)
     context_switch(&walker->state, &Current->state);
 
   }
+
    p1_switch(Current->pid, next_process->pid);
 } /* dispatcher */
 
@@ -618,22 +627,32 @@ int zap(int pid)
     {
       //iterate through ZapperList and add itself to the end
       walker = ZapperList;
-      while(walker->next_proc_ptr != NULL)
+      while(walker->next_zapper_ptr != NULL)
       {
-        walker = walker->next_proc_ptr;
+        walker = walker->next_zapper_ptr;
       }
 
-      walker->next_proc_ptr = Current;
+      walker->next_zapper_ptr = Current;
     }
-    
+   
+   if(ProcTable[proc_slot].status != DEAD)
+   { 
     //change status of current process to BLOCKED
-    //Current->status = BLOCKED;
+    Current->status = BLOCKED;
     //call dispatcher
     dispatcher();
+   }
   }
+  
+  if(Current->z_status == ZAPPED)
+    return -1;
 
   //to supress warning for now
-  return 0;
+  if(ProcTable[proc_slot].status == DEAD)
+    return 0;
+
+  console("should never see this.\n");
+  return -2;
 
 }
 
@@ -693,36 +712,31 @@ void dump_processes()
   {
     parent = ProcTable[i].parent_proc_ptr;
     child = ProcTable[i].child_proc_ptr;
-    
-    if(ProcTable[i].pid != -1)
-    { 
-      console("Name: %s\n", ProcTable[i].name);
-      console("PID: %d\n", ProcTable[i].pid);
-      console("Priority: %d\n", ProcTable[i].priority);
-      console("CPU Time: \n");
+     
+    console("Name: %s\n", ProcTable[i].name);
+    console("PID: %d\n", ProcTable[i].pid);
+    console("Priority: %d\n", ProcTable[i].priority);
+    console("CPU Time: \n");
 
-      if(parent == NULL)
-        console("Parent's PID: No parent\n");
-      else
-        console("Parent PID: %lu\n", parent->pid);
+    if(parent == NULL)
+       console("Parent's PID: No parent\n");
+    else
+      console("Parent PID: %lu\n", parent->pid);
+    if(child == NULL)
+      console("Child: No children\n");
+    else
+      console("Child: %s\n", child->name);
 
-      if(child == NULL)
-        console("Child: No children\n");
-      else
-        console("Child: %s\n", child->name);
-
-      if(ProcTable[i].status == EMPTY)
-        console("Status: Empty\n\n");
-      else if(ProcTable[i].status == DEAD)
-        console("Status: Dead\n\n");
-      else if(ProcTable[i].status == BLOCKED)
-        console("Status: Blocked\n\n");
-      else if(ProcTable[i].status == READY)
-        console("Status: Ready\n\n");
-      else if(ProcTable[i].status == RUNNING)
-        console("Status: Running\n\n");
-    }
-    
+    if(ProcTable[i].status == EMPTY)
+      console("Status: Empty\n\n");
+    else if(ProcTable[i].status == DEAD)
+      console("Status: Dead\n\n");
+    else if(ProcTable[i].status == BLOCKED)
+      console("Status: Blocked\n\n");
+    else if(ProcTable[i].status == READY)
+      console("Status: Ready\n\n");
+    else if(ProcTable[i].status == RUNNING)
+      console("Status: Running\n\n");        
   }
 }
 
@@ -822,3 +836,69 @@ void time_slice(void)
 }
 
 */
+
+static void BlkList_Delete(proc_ptr process)
+{
+   test_kernel_mode();
+
+   proc_ptr walker, previous;
+   previous = NULL;
+   walker = BlockedList;
+
+   while(walker != NULL && walker->pid != process->pid)
+   {
+     previous = walker;
+     walker = walker->next_proc_ptr;
+   }
+
+   if(previous == NULL)
+   {
+     //BlockedList points to next item in the list.
+     //The selected item's next process pointer is made NULL, disconnecting it
+     //from the blocked list.
+     BlockedList = walker->next_proc_ptr;
+     walker->next_proc_ptr = NULL;
+   }
+   else
+   {
+     if(walker->next_proc_ptr == NULL)
+       previous->next_proc_ptr = NULL;
+     else
+     {
+       previous->next_proc_ptr = walker->next_proc_ptr;
+       walker->next_proc_ptr = NULL;
+     }
+   }
+   return;
+}
+
+static void ZprList_Delete(proc_ptr process)
+{
+  test_kernel_mode();
+
+  proc_ptr walker, previous;
+  previous = NULL;
+  walker = ZapperList;
+
+  while(walker != NULL && walker->z_pid != process->z_pid)
+  {
+    previous = walker;
+    walker = walker->next_zapper_ptr;
+  }
+
+  if(previous == NULL)
+  {
+    ZapperList = walker->next_zapper_ptr;
+    walker->next_zapper_ptr = NULL;
+  }
+  else
+  {
+    if(walker->next_zapper_ptr == NULL)
+      previous->next_zapper_ptr = NULL;
+    else
+    {
+      previous->next_zapper_ptr = walker->next_zapper_ptr;
+      walker->next_zapper_ptr = NULL;
+    }
+  }
+}
