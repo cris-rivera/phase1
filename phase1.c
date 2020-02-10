@@ -28,6 +28,10 @@ int check_io();
 void test_kernel_mode();
 int block_me(int new_status);
 int unblock_proc(int pid);
+void clock_handler();
+int read_time(void);
+int read_cur_start_time(void);
+void time_slice(void);
 static void BlkList_Delete(proc_ptr process);
 static void ZprList_Delete(proc_ptr process);
 
@@ -87,6 +91,7 @@ void startup()
       ProcTable[i].exit_status = -1;
       ProcTable[i].z_status = NONE;
       ProcTable[i].z_pid = -1;
+      ProcTable[i].start_time = 0;
    }  
    
    /* Initialize the Ready list, etc. */
@@ -98,7 +103,7 @@ void startup()
    Current = NULL;
 
    /* Initialize the clock interrupt handler */
-   //int vec[CLOCK_DEV] = clock_handler;
+   int_vec[CLOCK_DEV] = clock_handler;
 
    /* startup a sentinel process */
    if (DEBUG && debugflag)
@@ -832,11 +837,10 @@ int unblock_proc(int pid)
   return 0;
 }  
 
-/* Unifished Clock handler
 
 void clock_handler()
 {
-	if(Current->start_time == NULL)
+	if(Current->start_time == 0)
 		Current->start_time = read_time();
 	time_slice();
 
@@ -855,13 +859,16 @@ int read_cur_start_time(void)
 
 void time_slice(void)
 {
-	if(((read_time() - read_cur_start_time()) * 1000) >= 80))
+	if(((read_time() - read_cur_start_time()) * 1000) >= 80)
+  {
+    Current->start_time = 0;
 		dispatcher();
+  }
 	else
 		return; 
 }
 
-*/
+
 
 static void BlkList_Delete(proc_ptr process)
 {
