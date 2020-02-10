@@ -155,26 +155,32 @@ static void RdyList_Insert(proc_ptr process)
 
   proc_ptr walker, previous;
   previous = NULL;
-  walker = ReadyList;
-  while(walker != NULL && walker->priority <= process->priority)
-  {
-    previous = walker;
-    walker = walker->next_proc_ptr;
-  }
 
-  if(previous == NULL)
-  {
-    //process goes at the front of ReadyList
-    process->next_proc_ptr = ReadyList;
+  if(ReadyList == NULL)
     ReadyList = process;
-  }
   else
   {
-    //process goes after previous
-    previous->next_proc_ptr = process;
-    process->next_proc_ptr = walker;
+    walker = ReadyList;
+    while(walker != NULL && walker->priority <= process->priority)
+    {
+      previous = walker;
+      walker = walker->next_proc_ptr;
+    }
+
+    if(previous == NULL)
+    {
+      //process goes at the front of ReadyList
+      process->next_proc_ptr = ReadyList;
+      ReadyList = process;
+    }
+    else
+    {
+      //process goes after previous
+      previous->next_proc_ptr = process;
+      process->next_proc_ptr = walker;
+    }
   }
-  return;
+  //return;
 }/* RdyList_Insert*/
 
 /* ------------------------------------------------------------------------
@@ -253,9 +259,11 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
                 ProcTable[proc_slot].stack, 
                 ProcTable[proc_slot].stacksize, launch);
 
-   proc_tbl_ptr = &ProcTable[proc_slot];
-   RdyList_Insert(proc_tbl_ptr);
    ProcTable[proc_slot].status = READY;
+   proc_tbl_ptr = &ProcTable[proc_slot];
+   console("name into ready list: %s\n", proc_tbl_ptr->name);
+   RdyList_Insert(proc_tbl_ptr);
+   //ProcTable[proc_slot].status = READY;
    
    /* for future phase(s) */
    //p1_fork(ProcTable[proc_slot].pid);
@@ -536,7 +544,7 @@ void dispatcher(void)
     context_switch(&walker->state, &Current->state);
 
   }
-
+  console("name in dispatcher: %s\n", Current->name);
    p1_switch(Current->pid, next_process->pid);
 } /* dispatcher */
 
