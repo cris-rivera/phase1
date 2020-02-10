@@ -21,7 +21,7 @@ start1( char *arg )
 
   console("START1: zap_result = %d\n", zap_result);
   join_result = join(&status);
-
+ 
   quit(0);
   return 0;
 

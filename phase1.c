@@ -24,6 +24,7 @@ static void RdyList_Insert(proc_ptr process);
 int getpid();
 void dump_processes();
 int zap(int pid);
+int is_zapped(void);
 int check_io();
 void test_kernel_mode();
 int block_me(int new_status);
@@ -463,11 +464,6 @@ void quit(int code)
     //empty. 
     Current->status = DEAD;
     Current->exit_status = code;
-    if(parent_ptr != NULL)
-    {
-      parent_ptr->status = READY;
-      RdyList_Insert(parent_ptr);
-    }
 
     if(Current->z_status == ZAPPED)
     {
@@ -489,6 +485,15 @@ void quit(int code)
         else
           walker = walker->next_zapper_ptr;
 
+      }
+    }
+    else
+    {
+      //If parent is blocked but not a Zapper...
+      if(parent_ptr != NULL)
+      {
+       parent_ptr->status = READY;
+       RdyList_Insert(parent_ptr);
       }
     }
 
@@ -586,7 +591,7 @@ void dispatcher(void)
     context_switch(&walker->state, &Current->state);
 
   }
-
+   
    p1_switch(Current->pid, next_process->pid);
 } /* dispatcher */
 
@@ -707,7 +712,14 @@ int zap(int pid)
 
   console("should never see this.\n");
   return -2;
+}
 
+int is_zapped(void)
+{
+  if(Current->z_status == ZAPPED)
+    return 1;
+  else
+    return 0;
 }
 
 /* ------------------------------------------------------------------------
