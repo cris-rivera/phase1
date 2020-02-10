@@ -347,6 +347,8 @@ int join(int *code)
 {
   test_kernel_mode();
   proc_ptr temp = NULL;
+  int temp_pid = 0;
+
   //child process pointer should never use EMPTY that is for its status not 
   //its address. If a child was never there or a child gets taken off the
   //parent-child relationship, then the child process pointer should be made
@@ -387,11 +389,32 @@ int join(int *code)
   if(Current->child_proc_ptr->status == DEAD)
   {
     *code = Current->child_proc_ptr->exit_status;
+    temp_pid = Current->child_proc_ptr->pid;
     temp = Current->child_proc_ptr;
     Current->child_proc_ptr = temp->next_sibling_ptr;
-    temp->status = EMPTY;
+    
+    //Clear out PCB block
+    temp->next_proc_ptr = NULL;
+    temp->next_zapper_ptr = NULL;
+    temp->child_proc_ptr = NULL;
     temp->next_sibling_ptr = NULL;
-    return temp->pid;
+    temp->parent_proc_ptr = NULL;
+    memset(temp->name, 0, sizeof(temp->name));
+    memset(temp->start_arg, 0, sizeof(temp->start_arg));
+    temp->state.start = NULL;
+    temp->state.initial_psr = 0;
+    temp->pid = -1;
+    temp->priority = 0;
+    temp->start_func = NULL;
+    temp->stack = NULL;
+    temp->stacksize = 0;
+    temp->exit_status = -1;
+    temp->z_status = NONE;
+    temp->z_pid = -1;
+    temp->start_time = 0;
+    temp->status = EMPTY;
+    
+    return temp_pid;
   }
 
   console("join(): Should not see this!");
