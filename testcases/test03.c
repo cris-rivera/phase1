@@ -18,6 +18,7 @@ dump_processes();
   kid_pid = join(&status);
   sprintf(buf,"start1(): exit status for child %d is %d\n", kid_pid, status); 
   printf("%s", buf);
+  printf("statment\n");
   return 0;
 }
 

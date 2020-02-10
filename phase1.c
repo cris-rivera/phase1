@@ -403,6 +403,7 @@ void quit(int code)
       halt(1);
     }
    }
+
     //else statement was unnecessary, if there is a running child process
     //active it will halt and never reach any of the following code. If there
     //is not a running process, then it can reach this code and execute it
@@ -502,17 +503,20 @@ void dispatcher(void)
 
   }
   else if(Current->status == DEAD)
-  {
-    next_process = ReadyList;
-    ReadyList = ReadyList->next_proc_ptr;
-    next_process->next_proc_ptr = NULL;
+  { 
+    if(ReadyList != NULL)
+    { 
+      next_process = ReadyList;
+      ReadyList = ReadyList->next_proc_ptr;
+      next_process->next_proc_ptr = NULL;
 
-    DeadList = Current;
-    walker = Current;
+      DeadList = Current;
+      walker = Current;
 
-    Current = next_process;
-    Current->status = RUNNING;
-    context_switch(&walker->state, &Current->state);
+      Current = next_process;
+      Current->status = RUNNING;
+      context_switch(&walker->state, &Current->state);
+    }
   }
   else
   {

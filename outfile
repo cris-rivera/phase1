@@ -29,8 +29,6 @@ XXp1(): arg = `XXp1'
 XXp1(): executing fork of first child
 start1(): after fork of child 3
 start1(): performing join
-second whatever the fuck
-Null
 XXp2(): started
 XXp2(): arg = `XXp2'
 XXp1(): fork1 of first child returned pid = 4
@@ -40,7 +38,7 @@ XXp2(): arg = `XXp2'
 XXp1(): fork1 of second child returned pid = 5
 XXp1(): first join returned kid_pid = 5, status = 5
 XXp1(): second join returned kid_pid = 5, status = 5
-start1(): exit status for child 3 is -1
+start1(): exit status for child 3 is -3
 
 starting test 03 ....
 
@@ -50,6 +48,14 @@ XXp1(): arg = `XXp1'
 XXp1(): executing fork of first child
 start1(): after fork of child 3
 start1(): performing join
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
 
 Name: sentinel
 PID: 1
@@ -83,18 +89,366 @@ Parent PID: 3
 Child: No children
 Status: Ready
 
-second whatever the fuck
-Null
-XXp1(): fork1 of first child returned pid = 4
-XXp1(): executing fork of second child
-XXp2(): started, pid = 4
-XXp2(): arg = `XXp2'
-XXp1(): fork1 of second child returned pid = 5
-XXp1(): zap'ing first child
-XXp2(): started, pid = 5
-XXp2(): arg = `XXp2'
-XXp1(): after zap'ing first child, status = 0
-XXp1(): zap'ing second child
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
 
 starting test 04 ....
 
@@ -1160,13 +1514,11 @@ start1(): started
 XXp1(): started
 XXp1(): arg = `XXp1'
 start1(): after fork of child 3
-second whatever the fuck
-Null
 XXp2(): started
 XXp2(): arg = `XXp2'
 XXp1(): after fork of child 4
 XXp1(): exit status for child 4 is 5
-start1(): exit status for child 3 is -1
+start1(): exit status for child 3 is -3
 
 starting test 08 ....
 
@@ -1176,20 +1528,16 @@ XXp1(): arg = `XXp1'
 XXp1(): executing fork of first child
 start1(): after fork of child 3
 start1(): performing join
-second whatever the fuck
-Null
 XXp1(): fork1 of first child returned pid = 4
 XXp1(): executing fork of second child
 XXp2(): started
 XXp2(): arg = `XXp2'
 XXp1(): fork1 of second child returned pid = 5
-second whatever the fuck
-not null
 XXp2(): started
 XXp2(): arg = `XXp2'
-XXp1(): first join returned kid_pid = 5, status = -1
+XXp1(): first join returned kid_pid = 5, status = 5
 XXp1(): second join returned kid_pid = 5, status = 5
-start1(): exit status for child 3 is -1
+start1(): exit status for child 3 is -3
 
 starting test 09 ....
 
@@ -1206,7 +1554,7 @@ XXp1(): arg = `XXp1'
 XXp1(): about to zap parent -- should result in deadlock
 start1(): after fork of child 3
 start1(): performing join
-start1(): exit status for child -1 is -1
+start1(): exit status for child -1 is 1
 quit(): Child processes are active
 starting test 11 ....
 
@@ -1229,15 +1577,19 @@ XXp1(): executing fork of first child
 start1(): after fork of child 3
 XXp1(): fork1 of first child returned pid = 4
 XXp1(): joining with first child
-second whatever the fuck
-Null
 start1(): after fork of child 5
 start1(): performing join
-second whatever the fuck
-not null
 XXp2(): started
 XXp2(): zap'ing child with pid_e 
 XXp3(): started
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
 
 Name: sentinel
 PID: 1
@@ -1277,15 +1629,360 @@ Priority: 4
 CPU Time: 
 Parent PID: 2
 Child: No children
-Status: Ready
+Status: Blocked
 
-XXp1(): join returned kid_pid = 4, status = -1
-second whatever the fuck
-not null
-XXp2(): after zap'ing child with pid_e, status = 0
-start1(): exit status for child 5 is -1
-start1(): performing join
-start1(): exit status for child 5 is 5
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
 
 starting test 14 ....
 
@@ -1296,15 +1993,19 @@ XXp1(): executing fork of first child
 start1(): after fork of child 3
 XXp1(): fork1 of first child returned pid = 4
 XXp1(): joining with first child
-second whatever the fuck
-Null
 start1(): after fork of child 5
 start1(): performing join
-second whatever the fuck
-not null
 XXp2(): started
 XXp2(): zap'ing process with pid_z 
 XXp3(): started
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
 
 Name: sentinel
 PID: 1
@@ -1344,15 +2045,360 @@ Priority: 4
 CPU Time: 
 Parent PID: 2
 Child: No children
-Status: Ready
+Status: Blocked
 
-XXp1(): join returned kid_pid = 4, status = -1
-second whatever the fuck
-not null
-XXp2(): after zap'ing process with pid_z, status = 0
-start1(): exit status for child 5 is -1
-start1(): performing join
-start1(): exit status for child 5 is 5
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
 
 starting test 15 ....
 
@@ -1365,15 +2411,17 @@ XXp1(): fork1 of first child returned pid = 4
 XXp1(): zap'ing process with pid_z 
 start1(): after fork of child 5
 start1(): performing join
-second whatever the fuck
-Null
-XXp1(): after zap'ing process with pid_z, status = 0
-XXp1(): joining with first child
-second whatever the fuck
-not null
 XXp2(): started
 XXp2(): zap'ing process with pid_z 
 XXp3(): started
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
 
 Name: sentinel
 PID: 1
@@ -1413,15 +2461,360 @@ Priority: 4
 CPU Time: 
 Parent PID: 2
 Child: No children
-Status: Ready
+Status: Blocked
 
-XXp1(): join returned kid_pid = 4, status = -1
-second whatever the fuck
-not null
-XXp2(): after zap'ing process with pid_z, status = 0
-start1(): exit status for child 5 is -1
-start1(): performing join
-start1(): exit status for child 5 is 5
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
 
 starting test 16 ....
 
@@ -1434,15 +2827,17 @@ XXp1(): fork1 of first child returned pid = 4
 XXp1(): zap'ing process with 4
 start1(): after fork of child 5
 start1(): performing join
-second whatever the fuck
-Null
-XXp1(): after zap'ing process with pid_z, status = 0
-XXp1(): joining with first child
-second whatever the fuck
-not null
 XXp2(): started
 XXp2(): zap'ing process with pid = 3 
 XXp3(): started
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
 
 Name: sentinel
 PID: 1
@@ -1482,15 +2877,360 @@ Priority: 4
 CPU Time: 
 Parent PID: 2
 Child: No children
-Status: Ready
+Status: Blocked
 
-XXp1(): join returned kid_pid = 4, status = -1
-second whatever the fuck
-not null
-XXp2(): after zap'ing process with pid = 3, status = 0
-start1(): exit status for child 5 is -1
-start1(): performing join
-start1(): exit status for child 5 is 5
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
+Name: 
+PID: -1
+Priority: 0
+CPU Time: 
+Parent's PID: No parent
+Child: No children
+Status: Empty
+
 
 starting test 17 ....
 
@@ -1530,15 +3270,11 @@ start1(): started
 
 starting test 23 ....
 
-start1(): started
-XXp1(): creating children
-second whatever the fuck
-Null
-XXp2(): started, pid = 4, calling block_me
-second whatever the fuck
-not null
 SIMULATOR TRAP: USLOSS_IntVec[USLOSS_CLOCK_INT] is NULL!
 
+start1(): started
+XXp1(): creating children
+XXp2(): started, pid = 4, calling block_me
 XXp2(): started, pid = 5, calling block_me
 
 starting test 24 ....
