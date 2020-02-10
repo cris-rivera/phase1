@@ -84,6 +84,7 @@ void startup()
       ProcTable[i].status = EMPTY;
       ProcTable[i].exit_status = -1;
       ProcTable[i].z_status = NONE;
+      ProcTable[i].z_pid = -1;
    }  
    
    /* Initialize the Ready list, etc. */
@@ -380,6 +381,7 @@ void quit(int code)
    test_kernel_mode();
    proc_ptr child_ptr = Current->child_proc_ptr;
    proc_ptr parent_ptr = Current->parent_proc_ptr;
+   proc_ptr walker = NULL;
    
    //added this if statement because not every process will have a child, and
    //it was causing a segmentation fault to not check because it was trying to
@@ -409,6 +411,23 @@ void quit(int code)
       parent_ptr->status = READY;
       RdyList_Insert(parent_ptr);
     }
+
+    if(Current->z_status == ZAPPED)
+    {
+      walker = ZapperList;
+      while(walker != NULL)
+      {
+        if(walker->z_pid == Current->pid)
+        {
+          walker->z_pid = -1;
+          walker->z_status = NONE;
+          walker->status = READY;
+          RdyList_Insert(walker);
+        }
+        walker = walker->next_proc_ptr;
+      }
+    }
+
     dispatcher();
 
    p1_quit(Current->pid);
@@ -444,12 +463,14 @@ void dispatcher(void)
   }
   else if(Current->status == BLOCKED)
   {
+    console("second whatever the fuck\n");
     next_process = ReadyList;
     ReadyList = ReadyList->next_proc_ptr;
     next_process->next_proc_ptr = NULL;
     
     if(BlockedList == NULL)
     {
+      console("Null\n");
       BlockedList = Current;
       Current = next_process;
       Current->status = RUNNING;
@@ -457,6 +478,7 @@ void dispatcher(void)
     }
     else
     {
+      console("not null\n");
       walker = BlockedList;
       while(walker->next_proc_ptr != NULL)
       {
@@ -558,14 +580,26 @@ static void check_deadlock()
 int zap(int pid)
 {
   test_kernel_mode();
-  int proc_slot = 0;
+  int proc_slot = -1;
   proc_ptr walker = NULL;
+
+  if(pid == Current->pid)
+  {
+    console("Error: Cannot process cannot zap itself!\n");
+    halt(1);
+  }
 
   //for loop to iterate through proc_list to find PID to zap
   for(int i = 0; i < MAXPROC; i++)
   {
     if(ProcTable[i].pid == pid)
       proc_slot = i;
+  }
+
+  if(proc_slot == -1)
+  {
+    console("Error: pid does not exist!\n");
+    halt(1);
   }
 
   //If statement to assure zapping only occurs if pid is actually found in the
@@ -593,7 +627,7 @@ int zap(int pid)
     }
     
     //change status of current process to BLOCKED
-    Current->status = BLOCKED;
+    //Current->status = BLOCKED;
     //call dispatcher
     dispatcher();
   }
