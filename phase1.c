@@ -26,7 +26,7 @@ void dump_processes();
 int zap(int pid);
 int is_zapped(void);
 int check_io();
-void test_kernel_mode();
+void test_kernel_mode(char *str);
 int block_me(int new_status);
 int unblock_proc(int pid);
 void clock_handler();
@@ -70,6 +70,8 @@ void startup()
 {
    int i;      /* loop index */
    int result; /* value returned by call to fork1() */
+   char *func_str = "startup()";
+   test_kernel_mode(func_str);
 
    /* initialize the process table */
    for(i = 0; i < MAXPROC; i++)
@@ -141,7 +143,8 @@ void startup()
    ----------------------------------------------------------------------- */
 void finish()
 {
-   test_kernel_mode();
+  char *func_str = "finish()";
+   test_kernel_mode(func_str);
    if (DEBUG && debugflag)
       console("in finish...\n");
 } /* finish */
@@ -155,7 +158,8 @@ void finish()
 117    ----------------------------------------------------------------------- */
 static void RdyList_Insert(proc_ptr process)
 {
-  test_kernel_mode();
+  char *func_str = "RdyList_Insert()";
+  test_kernel_mode(func_str);
 
   proc_ptr walker, previous;
   previous = NULL;
@@ -201,6 +205,7 @@ static void RdyList_Insert(proc_ptr process)
    ------------------------------------------------------------------------ */
 int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
 {
+   char *func_str = "fork1()";
    int proc_slot = next_pid % MAXPROC;
    int pid_count = 0;
    proc_ptr proc_tbl_ptr = NULL;
@@ -210,7 +215,7 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
       console("fork1(): creating process %s\n", name);
 
    /* test if in kernel mode; halt if in user mode */
-   test_kernel_mode();
+   test_kernel_mode(func_str);
 
    /* Return if stack size is too small */
    if(stacksize < USLOSS_MIN_STACK){
@@ -312,7 +317,8 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
    ------------------------------------------------------------------------ */
 void launch()
 {
-   test_kernel_mode();
+   char *func_str = "launch()";
+   test_kernel_mode(func_str);
    int result;
 
    if (DEBUG && debugflag)
@@ -346,7 +352,8 @@ void launch()
    ------------------------------------------------------------------------ */
 int join(int *code)
 {
-  test_kernel_mode();
+  char *func_str = "join()";
+  test_kernel_mode(func_str);
   proc_ptr temp = NULL;
   int temp_pid = 0;
 
@@ -434,7 +441,8 @@ int join(int *code)
    ------------------------------------------------------------------------ */
 void quit(int code)
 {
-   test_kernel_mode();
+   char *func_str = "quit()";
+   test_kernel_mode(func_str);
    proc_ptr child_ptr = Current->child_proc_ptr;
    proc_ptr parent_ptr = Current->parent_proc_ptr;
    proc_ptr walker = NULL;
@@ -451,7 +459,7 @@ void quit(int code)
     //child_proc_ptr only hold the address of the child process.
     if(child_ptr->status != DEAD)
     {
-      console("quit(): Child processes are active");
+      console("quit(): Child processes are active!\n");
       halt(1);
     }
    }
@@ -515,7 +523,8 @@ void quit(int code)
    ----------------------------------------------------------------------- */
 void dispatcher(void)
 {
-   test_kernel_mode();
+   char *func_str = "dispatcher()";
+   test_kernel_mode(func_str);
    proc_ptr next_process = NULL;
    proc_ptr walker = NULL;
    
@@ -609,7 +618,8 @@ void dispatcher(void)
    ----------------------------------------------------------------------- */
 int sentinel (char * dummy)
 {
-   test_kernel_mode();
+   char *func_str = "sentinel()";
+   test_kernel_mode(func_str);
    if (DEBUG && debugflag)
       console("sentinel(): called\n");
    while (1)
@@ -623,7 +633,8 @@ int sentinel (char * dummy)
 /* check to determine if deadlock has occurred... */
 static void check_deadlock()
 {
-   test_kernel_mode();
+   char *func_str = "check_deadlock()";
+   test_kernel_mode(func_str);
    //check_io() is a dummy function that just returns 0 during this phase.
    //I added its definition towards the end of this code. 
    if(check_io() == 1)
@@ -647,7 +658,8 @@ static void check_deadlock()
 
 int zap(int pid)
 {
-  test_kernel_mode();
+  char *func_str = "zap()";
+  test_kernel_mode(func_str);
   int proc_slot = -1;
   proc_ptr walker = NULL;
 
@@ -716,6 +728,8 @@ int zap(int pid)
 
 int is_zapped(void)
 {
+  char *func_str = "is_zapped()";
+  test_kernel_mode(func_str);
   if(Current->z_status == ZAPPED)
     return 1;
   else
@@ -731,14 +745,18 @@ int is_zapped(void)
  * ----------------------------------------------------------------------- */
 void enableInterrupts()
 {
+  char *func_str = "enableInterrupts()";
+  test_kernel_mode(func_str);
   
   //if not in kernel mode...
+  /*
   if((PSR_CURRENT_MODE & psr_get()) == 0){
     console("Kernel Error: Not in kernel mode. may not enable interrupts\n");
     halt(1);
   //else is in kernel mode...
   } else
-   /* We ARE in kernel mode */
+    We ARE in kernel mode */
+  
    psr_set( psr_get() | PSR_CURRENT_INT );
 } /* enablebleInterrupts */ 
 
@@ -748,25 +766,31 @@ void enableInterrupts()
  */
 void disableInterrupts()
 {
+  char *func_str = "disableInterrupts()";
+  test_kernel_mode(func_str);
+
   /* turn the interrupts OFF iff we are in kernel mode */
+  /*
   if((PSR_CURRENT_MODE & psr_get()) == 0) {
     //not in kernel mode
     console("Kernel Error: Not in kernel mode, may not disable interrupts\n");
     halt(1);
   } else
-    /* We ARE in kernel mode */
+     We ARE in kernel mode */
     psr_set( psr_get() & ~PSR_CURRENT_INT );
 } /* disableInterrupts */ 
 
 int getpid()
 {
-  test_kernel_mode();
+  char *func_str = "getpid()";
+  test_kernel_mode(func_str);
   return Current->pid;
 }
 
 void dump_processes()
 {
-  test_kernel_mode();
+  char *func_str = "dump_processes()";
+  test_kernel_mode(func_str);
   int i;
   proc_ptr parent = NULL;
   proc_ptr child = NULL;
@@ -811,21 +835,25 @@ void dump_processes()
 //now as a dummy function.
 int check_io()
 {
-  test_kernel_mode();
+  char *func_str = "check_io()";
+  test_kernel_mode(func_str);
   return 0;
 }
 
-void test_kernel_mode()
+void test_kernel_mode(char *str)
 {
   if((PSR_CURRENT_MODE & psr_get()) == 0)
   {
-       console("fork1(): not in kernel mode");
+       console("%s: not in kernel mode\n", str);
        halt(1);
   }
 }
 
 int block_me(int new_status)
 {
+  char *func_str = "block_me()";
+  test_kernel_mode(func_str);
+
   proc_ptr walker = BlockedList;
 
   if(new_status <= 10)
@@ -851,6 +879,8 @@ int block_me(int new_status)
 
 int unblock_proc(int pid)
 {
+  char *func_str = "unblock_proc()";
+  test_kernel_mode(func_str);
   proc_ptr walker = BlockedList;
   while(walker->pid != pid && walker->next_proc_ptr != NULL)
   {
@@ -875,6 +905,9 @@ int unblock_proc(int pid)
 
 void clock_handler()
 {
+  char *func_str = "clock_handler()";
+  test_kernel_mode(func_str);
+
 	if(Current->start_time == 0)
 		Current->start_time = read_time();
 	time_slice();
@@ -883,17 +916,26 @@ void clock_handler()
 
 int read_time(void)
 {
+  char *func_str = "read_time()";
+  test_kernel_mode(func_str);
+
 	// Return system time in microseconds
 	return sys_clock()/1000;
 }
 
 int read_cur_start_time(void)
 {
+  char *func_str = "read_cur_start_time()";
+  test_kernel_mode(func_str);
+
 	return Current->start_time;
 }
 
 void time_slice(void)
 {
+  char *func_str = "time_slice()";
+  test_kernel_mode(func_str);
+
 	if(((read_time() - read_cur_start_time()) * 1000) >= 80)
   {
     Current->start_time = 0;
@@ -907,7 +949,8 @@ void time_slice(void)
 
 static void BlkList_Delete(proc_ptr process)
 {
-   test_kernel_mode();
+   char *func_str = "BlkList_Delete()";
+   test_kernel_mode(func_str);
 
    proc_ptr walker, previous;
    previous = NULL;
@@ -942,7 +985,8 @@ static void BlkList_Delete(proc_ptr process)
 
 static void ZprList_Delete(proc_ptr process)
 {
-  test_kernel_mode();
+  char *func_str = "ZprList_delete()";
+  test_kernel_mode(func_str);
 
   proc_ptr walker, previous;
   previous = NULL;
