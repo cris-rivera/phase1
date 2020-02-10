@@ -71,7 +71,7 @@ unsigned int next_pid = SENTINELPID;
    ----------------------------------------------------------------------- */
 void startup()
 {
-   console("in startup\n");
+   //console("in startup\n");
 	int i;      /* loop index */
    int result; /* value returned by call to fork1() */
 
@@ -159,7 +159,7 @@ void finish()
 static void RdyList_Insert(proc_ptr process)
 {
 
-	console("in readylist \n");
+	//console("in readylist \n");
   test_kernel_mode();
 
   proc_ptr walker, previous;
@@ -201,7 +201,7 @@ static void RdyList_Insert(proc_ptr process)
 int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
 {
 
-	console("in fork \n");
+	//console("in fork \n");
    int proc_slot = next_pid % MAXPROC;
    int pid_count = 0;
    proc_ptr proc_tbl_ptr = NULL;
@@ -333,7 +333,7 @@ void launch()
 int join(int *code)
 {
 
-	console("in join \n");
+	//console("in join \n");
   test_kernel_mode();
   
   //child process pointer should never use EMPTY that is for its status not 
@@ -395,7 +395,7 @@ int join(int *code)
 void quit(int code)
 {
    
-	console("in quit \n");
+	//console("in quit \n");
 	test_kernel_mode();
    proc_ptr child_ptr = Current->child_proc_ptr;
    proc_ptr parent_ptr = Current->parent_proc_ptr;
@@ -447,7 +447,7 @@ void quit(int code)
 void dispatcher(void)
 {
 
-	console("in dispatcher \n");
+	//console("in dispatcher \n");
    test_kernel_mode();
    proc_ptr next_process = NULL;
    proc_ptr walker = NULL;
@@ -516,7 +516,7 @@ void dispatcher(void)
     * Sets the top of ready list to the next ready process.
     * disconnects next runnable process from ready list*/
     
-	console("outhh dispatch func\n");
+	//console("outhh dispatch func\n");
 	next_process = ReadyList;
     ReadyList = ReadyList->next_proc_ptr;
     next_process->next_proc_ptr = NULL;
@@ -548,7 +548,7 @@ void dispatcher(void)
 int sentinel (char * dummy)
 {
 
-	console("in sentinel \n");
+	//console("in sentinel \n");
    test_kernel_mode();
    if (DEBUG && debugflag)
       console("sentinel(): called\n");
@@ -564,7 +564,7 @@ int sentinel (char * dummy)
 static void check_deadlock()
 {
 	
-	console("in check_deadlock \n");
+	//console("in check_deadlock \n");
    test_kernel_mode();
    //check_io() is a dummy function that just returns 0 during this phase.
    //I added its definition towards the end of this code. 
@@ -590,7 +590,7 @@ static void check_deadlock()
 int zap(int pid)
 {
 	
-	console("in zap \n");
+	//console("in zap \n");
   test_kernel_mode();
   int proc_slot = 0;
   proc_ptr walker = NULL;
@@ -627,7 +627,7 @@ int zap(int pid)
     }
     
     //change status of current process to BLOCKED
-    Current->status = BLOCKED;
+    //Current->status = BLOCKED;
     //call dispatcher
     dispatcher();
   }
@@ -647,7 +647,7 @@ int zap(int pid)
 void enableInterrupts()
 {
   
-	console("in enableinterrupts \n");
+	//console("in enableinterrupts \n");
   //if not in kernel mode...
   if((PSR_CURRENT_MODE & psr_get()) == 0){
     console("Kernel Error: Not in kernel mode. may not enable interrupts\n");
@@ -665,7 +665,7 @@ void enableInterrupts()
 void disableInterrupts()
 {
 	  
-	console("in disableInterrupts \n");
+	//console("in disableInterrupts \n");
 /* turn the interrupts OFF iff we are in kernel mode */
   if((PSR_CURRENT_MODE & psr_get()) == 0) {
     //not in kernel mode
@@ -684,7 +684,7 @@ int getpid()
 
 void dump_processes()
 {
-	console("in  \n");
+	//console("in  \n");
   int i;
   proc_ptr parent = NULL;
   proc_ptr child = NULL;
@@ -741,19 +741,19 @@ int check_io()
 void test_kernel_mode()
 {
 
-	console("in test_kernel_mode\n");
+	//console("in test_kernel_mode\n");
   if((PSR_CURRENT_MODE & psr_get()) == 0)
   {
        console("fork1(): not in kernel mode");
        halt(1);
   }
-	console("out of test kernel mode\n");
+	//console("out of test kernel mode\n");
 }
 
 int block_me(int new_status)
 {
   
-	console("in block_me\n");
+	//console("in block_me\n");
 	proc_ptr walker = BlockedList;
 
   if(new_status <= 10)
@@ -780,7 +780,7 @@ int block_me(int new_status)
 int unblock_proc(int pid)
 {
   	
-	console("in unblock_proc\n");
+	//console("in unblock_proc\n");
 	proc_ptr walker = BlockedList;
   while(walker->pid != pid && walker->next_proc_ptr != NULL)
   {
@@ -815,20 +815,20 @@ int read_time(void)
 {
 	// Return system time in microseconds
 	
-	console("in read_time \n");
+	//console("in read_time \n");
 	return sys_clock()/1000;
 }
 
 int read_cur_start_time(void)
 {
 	
-	console("In read_cur_start_time \n");
+	//console("in read_cur_start_time \n");
 	return Current->start_time;
 }
 
 void time_slice(void)
 {
-	console("in time_slice \n");
+	//console("in time_slice \n");
 	if(((read_time() - read_cur_start_time()) * 1000) >= 80){
 		Current->start_time = 0;
 		dispatcher();
