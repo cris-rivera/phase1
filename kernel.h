@@ -1,4 +1,4 @@
-#define DEBUG 0
+#define DEBUG 1
 #define TRUE 1
 #define FALSE 0
 
@@ -8,6 +8,7 @@ typedef struct proc_struct * proc_ptr;
 
 struct proc_struct {
    proc_ptr       next_proc_ptr;
+   proc_ptr       next_zapper_ptr;
    proc_ptr       child_proc_ptr;
    proc_ptr       next_sibling_ptr;
    proc_ptr       parent_proc_ptr;
@@ -23,8 +24,8 @@ struct proc_struct {
    int            exit_status;   
    int            z_status;       /* NONE, ZAPPED, ZAPPER. */
    short          z_pid;          /* pid of process zapped by this process */
-   int 			  start_time;   
-/* other fields as needed... */
+   int            start_time;
+   /* other fields as needed... */
 };
 
 struct psr_bits {
@@ -42,6 +43,7 @@ union psr_values {
 
 //used as parameter of block_me(new_status), which must be larger than 10?
 enum {
+
   EMPTY = 11, 
   DEAD,       //12
   BLOCKED,    //13
