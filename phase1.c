@@ -36,6 +36,7 @@ int read_cur_start_time(void);
 void time_slice(void);
 static void BlkList_Delete(proc_ptr process);
 static void ZprList_Delete(proc_ptr process);
+int sys_clock(void);
 
 
 /* -------------------------- Globals ------------------------------------- */
@@ -856,7 +857,7 @@ void dump_processes()
     console("Name: %s\n", ProcTable[i].name);
     console("PID: %d\n", ProcTable[i].pid);
     console("Priority: %d\n", ProcTable[i].priority);
-    console("CPU Time: \n");
+    console("CPU Time: %d\n", ProcTable[i].start_time);
 
     if(parent == NULL)
        console("Parent's PID: No parent\n");
@@ -963,7 +964,9 @@ void clock_handler(int dev, void * unit)
   test_kernel_mode(func_str);
 
   // The first interrupt for the Current process
-	time_slice();
+	console("calling time slice()\n");
+  time_slice();
+  return;
 
 }
 
@@ -971,7 +974,7 @@ int read_time(void)
 {
   char *func_str = "read_time()";
   test_kernel_mode(func_str);
-
+  console("in read time\n");
   int time = sys_clock()/1000;
   time = time - read_cur_start_time();
 
@@ -983,7 +986,7 @@ int read_cur_start_time(void)
 {
   char *func_str = "read_cur_start_time()";
   test_kernel_mode(func_str);
-
+  console("in read cur\n");
 	return Current->start_time;
 }
 
@@ -992,7 +995,7 @@ void time_slice(void)
 {
   char *func_str = "time_slice()";
   test_kernel_mode(func_str);
-
+  console("in time slice\n");
   // Current process has exceeded 79ms of runtime 
 	if(read_time() >= 80)
 		dispatcher();
