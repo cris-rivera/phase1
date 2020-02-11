@@ -383,23 +383,19 @@ int join(int *code)
   // Current process has no children
   if(Current->child_proc_ptr == NULL)
      return -2;
-   
- 
-  //check if parent is zapped
-  //if yes, return -1
-  if(Current->z_status == ZAPPED)
-    return -1;
-
 
   // Continuously call dispatcher until child process quits
   while(Current->child_proc_ptr->status != DEAD)
   {
     Current->status = BLOCKED;
     dispatcher();
-    if(Current->child_proc_ptr->status == READY)
-      console("%s: not dead.\n", Current->child_proc_ptr->name);
   }
   
+  //check if parent is zapped
+ //if yes, return -1
+ if(Current->z_status == ZAPPED)
+   return -1;
+
   // Child has quit
   if(Current->child_proc_ptr->status == DEAD)
   {
@@ -430,6 +426,7 @@ int join(int *code)
     temp->z_pid = -1;
     temp->start_time = 0;
     temp->status = EMPTY;
+   
     
     return temp_pid;
   }
@@ -615,6 +612,9 @@ void dispatcher(void)
     }
 
     // else call Sentinel here? Current process is dead and ReadyList is NULL
+    //ReadyList should never be NULL, sentinel is always the last element in
+    //ReadyList. Once all processes are dead, the context switch will switch to
+    //sentinel from the top of ReadyList.
   }
 
   // Under which circumstances will this code execute?
@@ -999,7 +999,13 @@ static void BlkList_Delete(proc_ptr process)
    previous = NULL;
    walker = BlockedList;
 
-   while(walker != NULL && walker->pid != process->pid)
+   if(walker == NULL)
+   {
+     console("BlkList_Delete(): BlockedList is empty. Halting...\n");
+     halt(1);
+   }
+
+   while(walker->next_proc_ptr != NULL && walker->pid != process->pid)
    {
      previous = walker;
      walker = walker->next_proc_ptr;
