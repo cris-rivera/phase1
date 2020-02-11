@@ -22,8 +22,9 @@ struct proc_struct {
    unsigned int   stacksize;
    int            status;         /* READY, BLOCKED, QUIT, etc. */
    int            exit_status;   
-   int            z_status;       /* NONE, ZAPPED, ZAPPER. */
-   short          z_pid;          /* pid of process zapped by this process */
+   int            zapped_status;       /* NONE, ZAPPED */
+   int            zapper_status;       /* NONE, ZAPPER */
+   short          z_pid;         /* pid of process zapped by this process */
    int            start_time;
    /* other fields as needed... */
 };

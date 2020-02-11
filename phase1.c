@@ -92,7 +92,8 @@ void startup()
       ProcTable[i].stacksize = 0;
       ProcTable[i].status = EMPTY;
       ProcTable[i].exit_status = -1;
-      ProcTable[i].z_status = NONE;
+      ProcTable[i].zapped_status = NONE;
+      ProcTable[i].zapper_status = NONE;
       ProcTable[i].z_pid = -1;
       ProcTable[i].start_time = 0;
    }  
@@ -393,7 +394,7 @@ int join(int *code)
   
   //check if parent is zapped
  //if yes, return -1
- if(Current->z_status == ZAPPED)
+ if(Current->zapped_status == ZAPPED)
    return -1;
 
   // Child has quit
@@ -422,7 +423,8 @@ int join(int *code)
     temp->stack = NULL;
     temp->stacksize = 0;
     temp->exit_status = -1;
-    temp->z_status = NONE;
+    temp->zapped_status = NONE;
+    temp->zapper_status = NONE;
     temp->z_pid = -1;
     temp->start_time = 0;
     temp->status = EMPTY;
@@ -483,7 +485,7 @@ void quit(int code)
     Current->status = DEAD;
     Current->exit_status = code;
 
-    if(Current->z_status == ZAPPED)
+    if(Current->zapped_status == ZAPPED)
     {
       walker = ZapperList;
       temp = BlockedList;
@@ -494,7 +496,7 @@ void quit(int code)
           temp = walker;
           walker = walker->next_zapper_ptr;
           temp->z_pid = -1;
-          temp->z_status = NONE;
+          temp->zapper_status = NONE;
           ZprList_Delete(temp);
           BlkList_Delete(temp);
           temp->status = READY;
@@ -703,7 +705,7 @@ int zap(int pid)
 {
   if(DEBUG && debugflag)
     console("in zap()\n");
-    
+   
   char *func_str = "zap()";
   test_kernel_mode(func_str);
   int proc_slot = -1;
@@ -721,7 +723,7 @@ int zap(int pid)
     if(ProcTable[i].pid == pid)
       proc_slot = i;
   }
-
+  
   if(proc_slot == -1)
   {
     console("Error: pid does not exist!\n");
@@ -732,11 +734,12 @@ int zap(int pid)
   //process table
   if(proc_slot != 0)
   {
+    
     //change z_status of newly found pid process to ZAPPED
-    ProcTable[proc_slot].z_status = ZAPPED;
+    ProcTable[proc_slot].zapped_status = ZAPPED;
 
     //change z_status of current process to zapper
-    Current->z_status = ZAPPER;
+    Current->zapper_status = ZAPPER;
     Current->z_pid = ProcTable[proc_slot].pid;
 
     //add current process to ZapperList
@@ -763,7 +766,7 @@ int zap(int pid)
    }
   }
   
-  if(Current->z_status == ZAPPED)
+  if(Current->zapped_status == ZAPPED)
     return -1;
 
   // to supress warning for now
@@ -782,7 +785,7 @@ int is_zapped(void)
 
   char *func_str = "is_zapped()";
   test_kernel_mode(func_str);
-  if(Current->z_status == ZAPPED)
+  if(Current->zapped_status == ZAPPED)
     return 1;
   else
     return 0;
@@ -896,7 +899,7 @@ int block_me(int new_status)
     halt(1);
   }
 
-  if(Current->z_status == ZAPPED)
+  if(Current->zapped_status == ZAPPED)
     return -1;
 
   // Insert Current to end of BlockedList
@@ -927,7 +930,7 @@ int unblock_proc(int pid)
   if(walker->status != BLOCKED || walker == Current || walker->status <= 10 || walker->pid != pid)
     return -2;
 
-  if(Current->z_status == ZAPPED)
+  if(Current->zapped_status == ZAPPED)
     return -1;
 
   //TODO delete unblocked process from BlockedList
