@@ -40,7 +40,7 @@ static void ZprList_Delete(proc_ptr process);
 /* -------------------------- Globals ------------------------------------- */
 
 /* Patrick's debugging global variable... */
-int debugflag = 0;
+int debugflag = 1;
 
 /* the process table */
 proc_struct ProcTable[MAXPROC];
@@ -901,6 +901,7 @@ int block_me(int new_status)
     walker = walker->next_proc_ptr;
   }
   walker->next_proc_ptr = Current;
+
   dispatcher();
 
   return 0;
@@ -911,6 +912,8 @@ int unblock_proc(int pid)
   char *func_str = "unblock_proc()";
   test_kernel_mode(func_str);
   proc_ptr walker = BlockedList;
+
+  // Find process in BlockedList with designated PID
   while(walker->pid != pid && walker->next_proc_ptr != NULL)
   {
     walker = walker->next_proc_ptr;
@@ -937,6 +940,7 @@ void clock_handler()
   char *func_str = "clock_handler()";
   test_kernel_mode(func_str);
 
+  // The first interrupt for the Current process
 	if(Current->start_time == 0)
 		Current->start_time = read_time();
 	time_slice();
@@ -960,11 +964,13 @@ int read_cur_start_time(void)
 	return Current->start_time;
 }
 
+
 void time_slice(void)
 {
   char *func_str = "time_slice()";
   test_kernel_mode(func_str);
 
+  // Current process has exceeded 79ms of runtime 
 	if(((read_time() - read_cur_start_time()) * 1000) >= 80)
   {
     Current->start_time = 0;
@@ -975,9 +981,11 @@ void time_slice(void)
 }
 
 
-
 static void BlkList_Delete(proc_ptr process)
 {
+  if(DEBUG && debugflag)
+    console("in BlkList_Delete()\n");
+
    char *func_str = "BlkList_Delete()";
    test_kernel_mode(func_str);
 

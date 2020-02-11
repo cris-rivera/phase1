@@ -1,4 +1,4 @@
-#define DEBUG 0
+#define DEBUG 1
 #define TRUE 1
 #define FALSE 0
 
@@ -43,6 +43,7 @@ union psr_values {
 
 //used as parameter of block_me(new_status), which must be larger than 10?
 enum {
+
   EMPTY = 11, 
   DEAD,       //12
   BLOCKED,    //13
