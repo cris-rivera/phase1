@@ -226,9 +226,11 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
    /* test if in kernel mode; halt if in user mode */
    test_kernel_mode(func_str);
 
+   //enableInterrupts();
+
    /* Return if stack size is too small */
    if(stacksize < USLOSS_MIN_STACK){
-      console("fork1(): stack size too small");
+      console("fork1(): stack size too small\n");
       halt(1);
    }
 
@@ -323,6 +325,7 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
   }
 
   enableInterrupts();
+
   return ProcTable[proc_slot].pid;
 
 } /* fork1 */
@@ -713,7 +716,7 @@ int zap(int pid)
 
   if(pid == Current->pid)
   {
-    console("Error: Cannot process cannot zap itself!\n");
+    console("Zap(): Cannot process cannot zap itself!\n");
     halt(1);
   }
 
@@ -961,7 +964,7 @@ int read_time(void)
   test_kernel_mode(func_str);
 
 	// Return system time in microseconds
-	return sys_clock()/1000;
+	return sys_clock() /1000;
 }
 
 int read_cur_start_time(void)
@@ -979,7 +982,7 @@ void time_slice(void)
   test_kernel_mode(func_str);
 
   // Current process has exceeded 79ms of runtime 
-	if(((read_time() - read_cur_start_time()) * 1000) >= 80)
+	if((read_time() - read_cur_start_time()) >= 80)
   {
     Current->start_time = 0;
 		dispatcher();
