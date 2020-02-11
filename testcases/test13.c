@@ -72,7 +72,7 @@ int XXp2(char *arg)
 int XXp3(char *arg)
 {
   printf("XXp3(): started\n");
-  dump_processes();
+  //dump_processes();
   quit(5);
   return 0;
 }

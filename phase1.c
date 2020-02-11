@@ -40,7 +40,7 @@ static void ZprList_Delete(proc_ptr process);
 /* -------------------------- Globals ------------------------------------- */
 
 /* Patrick's debugging global variable... */
-int debugflag = 1;
+int debugflag = 0;
 
 /* the process table */
 proc_struct ProcTable[MAXPROC];
@@ -396,6 +396,8 @@ int join(int *code)
   {
     Current->status = BLOCKED;
     dispatcher();
+    if(Current->child_proc_ptr->status == READY)
+      console("%s: not dead.\n", Current->child_proc_ptr->name);
   }
   
   // Child has quit
@@ -506,15 +508,14 @@ void quit(int code)
 
       }
     }
-    else
-    {
-      //If parent is blocked but not a Zapper...
+     
+      //If parent is blocked, unblock it.
       if(parent_ptr != NULL)
       {
        parent_ptr->status = READY;
        RdyList_Insert(parent_ptr);
       }
-    }
+    
 
     dispatcher();
 
@@ -686,13 +687,13 @@ static void check_deadlock()
 
    if(process_count > 1){
       if(DEBUG && debugflag)
-        console("in check_deadlock: process_count > 1\n");
+        console("check_deadlock(): process_count = %d\n", process_count);
       halt(1);
    }
    
    if(process_count == 1){
       if(DEBUG && debugflag)
-        console("in check_deadlock: process_count = 0\n");
+        console("check_deadlock(): process_count = 0\n");
       halt(0);
    }
 
@@ -754,7 +755,7 @@ int zap(int pid)
     }
    
    // ZAPPED process is not DEAD
-   if(ProcTable[proc_slot].status != DEAD)
+   while(ProcTable[proc_slot].status != DEAD && ProcTable[proc_slot].status != EMPTY)
    { 
     //change status of current process to BLOCKED
     Current->status = BLOCKED;
@@ -767,10 +768,10 @@ int zap(int pid)
 
   // to supress warning for now
   // ZAPPED process is DEAD
-  if(ProcTable[proc_slot].status == DEAD)
+  if(ProcTable[proc_slot].status == DEAD || ProcTable[proc_slot].status == EMPTY)
     return 0;
 
-  console("should never see this.\n");
+  console("zap(): should never see this.\n");
   return -2;
 }
 
