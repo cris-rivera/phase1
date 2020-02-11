@@ -143,7 +143,8 @@ void startup()
    ----------------------------------------------------------------------- */
 void finish()
 {
-  char *func_str = "finish()";
+
+   char *func_str = "finish()";
    test_kernel_mode(func_str);
    if (DEBUG && debugflag)
       console("in finish...\n");
@@ -164,26 +165,33 @@ static void RdyList_Insert(proc_ptr process)
   proc_ptr walker, previous;
   previous = NULL;
 
+
   if(ReadyList == NULL)
     ReadyList = process;
   else
   {
     walker = ReadyList;
+    
+    // "walker" steps to link in ReadyList with greater priority than "process"
+    // "previous" points to ReadyList link before the greater-priority process.
     while(walker != NULL && walker->priority <= process->priority)
     {
       previous = walker;
       walker = walker->next_proc_ptr;
     }
 
+    // "process" goes to the front of ReadyList if it has a lower priority
+    // than any other process in ReadyList. 
     if(previous == NULL)
     {
-      //process goes at the front of ReadyList
       process->next_proc_ptr = ReadyList;
       ReadyList = process;
     }
+
+    // Insert "process" into ReadyList immeadiately before the next
+    // link which has a greater priority
     else
     {
-      //process goes after previous
       previous->next_proc_ptr = process;
       process->next_proc_ptr = walker;
     }
@@ -269,6 +277,8 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
                 ProcTable[proc_slot].stack, 
                 ProcTable[proc_slot].stacksize, launch);
 
+   
+   //Insert forked process into ReadyList
    ProcTable[proc_slot].status = READY;
    proc_tbl_ptr = &ProcTable[proc_slot];
    RdyList_Insert(proc_tbl_ptr);
@@ -277,12 +287,20 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
    //p1_fork(ProcTable[proc_slot].pid);
 
   //sets up Parent-Child relationship.
+
   if(Current != NULL)
   {
+    // Current has no children yet, establish child-parent relationship
     if(Current->child_proc_ptr == NULL) 
       Current->child_proc_ptr = &ProcTable[proc_slot];
+
+    // Current has one child, establish sibling relationship between 
+    // Current's child and process being forked
     else if(Current->child_proc_ptr->next_sibling_ptr == NULL)
         Current->child_proc_ptr->next_sibling_ptr = &ProcTable[proc_slot];
+    
+    // Current has multiple children. Insert the process currently being 
+    // forked at the end of the next_sibiling linked list.
     else
     {
       walker = Current->child_proc_ptr;
@@ -293,6 +311,7 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
       walker->next_sibling_ptr = &ProcTable[proc_slot];
     }
 
+    // establish parent-child relationship
     ProcTable[proc_slot].parent_proc_ptr = Current;
   }
 
@@ -352,53 +371,41 @@ void launch()
    ------------------------------------------------------------------------ */
 int join(int *code)
 {
+
+  if(DEBUG && debugflag)
+    console("in join()\n");
+
   char *func_str = "join()";
   test_kernel_mode(func_str);
   proc_ptr temp = NULL;
   int temp_pid = 0;
 
-  //child process pointer should never use EMPTY that is for its status not 
-  //its address. If a child was never there or a child gets taken off the
-  //parent-child relationship, then the child process pointer should be made
-  //NULL not EMPTY.
+  // Current process has no children
   if(Current->child_proc_ptr == NULL)
      return -2;
    
-  //not sure what this is for 
-  /*
-  while(Current->child_proc_ptr->exit_status == -1)
-  {
-     //sleep? 
-  }*/
-
-  //Why is this here?
-  //return -2;
-
+ 
   //check if parent is zapped
   //if yes, return -1
   if(Current->z_status == ZAPPED)
     return -1;
 
-  //if the child process has not quit yet, the parent process must block and
-  //wait for the child to quit(). Wait for an interrupt is okay but, the parent
-  //must block to allow to child to run and then quit, right?
+
+  // Continuously call dispatcher until child process quits
   while(Current->child_proc_ptr->status != DEAD)
   {
     Current->status = BLOCKED;
     dispatcher();
-    //I do not think we can use this until the clock interrupt handler is coded
-    //and the interrupt vector is initialized. We cannot do that until after we
-    //finish join so I think join's wait needs to be written without it. 
-    //waitint();
   }
   
-  //I think this either needs to say "child_proc_ptr->status == DEAD", or "child_proc_ptr
-  //== NULL.
+  // Child has quit
   if(Current->child_proc_ptr->status == DEAD)
   {
     *code = Current->child_proc_ptr->exit_status;
     temp_pid = Current->child_proc_ptr->pid;
     temp = Current->child_proc_ptr;
+
+    // Make Current's next child the previous child's next sibling
     Current->child_proc_ptr = temp->next_sibling_ptr;
     
     //Clear out PCB block
@@ -441,6 +448,10 @@ int join(int *code)
    ------------------------------------------------------------------------ */
 void quit(int code)
 {
+
+   if(DEBUG && debugflag)
+      console("in quit()\n");
+
    char *func_str = "quit()";
    test_kernel_mode(func_str);
    proc_ptr child_ptr = Current->child_proc_ptr;
@@ -523,28 +534,39 @@ void quit(int code)
    ----------------------------------------------------------------------- */
 void dispatcher(void)
 {
+   if(DEBUG && debugflag)
+    console("in dispatcher()\n");
    char *func_str = "dispatcher()";
    test_kernel_mode(func_str);
    proc_ptr next_process = NULL;
    proc_ptr walker = NULL;
    
-  /* checks if there is a process currently running */
+  // No currently running process. This code will intiate
+  // the first process to run. ReadyList should only contain
+  // one process
   if(Current == NULL)
   {
+    
+    // next_process points to the singular process in ReadyList
     next_process = ReadyList;
     ReadyList = ReadyList->next_proc_ptr;
     next_process->next_proc_ptr = NULL;
     
+    // Execute Current
     Current = next_process;
     Current->status = RUNNING;
     context_switch(NULL, &Current->state);
   }
+
+  // Current process has been blocked
   else if(Current->status == BLOCKED)
   {
     next_process = ReadyList;
     ReadyList = ReadyList->next_proc_ptr;
     next_process->next_proc_ptr = NULL;
     
+    // There are no other blocked processes.
+    // Add Current process to the BlockedList and execute next process in ReadyList
     if(BlockedList == NULL)
     {
       BlockedList = Current;
@@ -552,14 +574,20 @@ void dispatcher(void)
       Current->status = RUNNING;
       context_switch(&BlockedList->state, &Current->state);
     }
+
+    // There are at least one blocked processes
     else
     {
+      // Add Current to the end of BlockedList
       walker = BlockedList;
       while(walker->next_proc_ptr != NULL)
       {
         walker = walker->next_proc_ptr;
       }
       walker->next_proc_ptr = Current;
+
+      // Execute next process in ReadyList
+      // Walker is used as a temporary holder for previously running process
       walker = Current;
       Current = next_process;
       Current->status = RUNNING;
@@ -567,8 +595,11 @@ void dispatcher(void)
     }
 
   }
+
+
   else if(Current->status == DEAD)
   { 
+    // Run next process in ReadyList
     if(ReadyList != NULL)
     { 
       next_process = ReadyList;
@@ -581,7 +612,12 @@ void dispatcher(void)
       Current->status = RUNNING;
       context_switch(&walker->state, &Current->state);
     }
+
+    // else call Sentinel here? Current process is dead and ReadyList is NULL
   }
+
+  // Under which circumstances will this code execute?
+  // When clock_handler switches processes?
   else
   {
    /* Sets top of ready list as next runnable process.
@@ -635,8 +671,8 @@ static void check_deadlock()
 {
    char *func_str = "check_deadlock()";
    test_kernel_mode(func_str);
+
    //check_io() is a dummy function that just returns 0 during this phase.
-   //I added its definition towards the end of this code. 
    if(check_io() == 1)
       return;
   
@@ -648,16 +684,25 @@ static void check_deadlock()
          process_count++;
    }
 
-   if(process_count > 1)
+   if(process_count > 1){
+      if(DEBUG && debugflag)
+        console("in check_deadlock: process_count > 1\n");
       halt(1);
+   }
    
-   if(process_count == 1)
+   if(process_count == 1){
+      if(DEBUG && debugflag)
+        console("in check_deadlock: process_count = 0\n");
       halt(0);
+   }
 
 } /* check_deadlock */
 
 int zap(int pid)
 {
+  if(DEBUG && debugflag)
+    console("in zap()\n");
+    
   char *func_str = "zap()";
   test_kernel_mode(func_str);
   int proc_slot = -1;
@@ -686,11 +731,13 @@ int zap(int pid)
   //process table
   if(proc_slot != 0)
   {
-    //change z_status of newly found pid process to zapped
+    //change z_status of newly found pid process to ZAPPED
     ProcTable[proc_slot].z_status = ZAPPED;
+
     //change z_status of current process to zapper
     Current->z_status = ZAPPER;
     Current->z_pid = ProcTable[proc_slot].pid;
+
     //add current process to ZapperList
     if(ZapperList == NULL)
       ZapperList = Current;
@@ -706,11 +753,11 @@ int zap(int pid)
       walker->next_zapper_ptr = Current;
     }
    
+   // ZAPPED process is not DEAD
    if(ProcTable[proc_slot].status != DEAD)
    { 
     //change status of current process to BLOCKED
     Current->status = BLOCKED;
-    //call dispatcher
     dispatcher();
    }
   }
@@ -718,7 +765,8 @@ int zap(int pid)
   if(Current->z_status == ZAPPED)
     return -1;
 
-  //to supress warning for now
+  // to supress warning for now
+  // ZAPPED process is DEAD
   if(ProcTable[proc_slot].status == DEAD)
     return 0;
 
@@ -728,6 +776,9 @@ int zap(int pid)
 
 int is_zapped(void)
 {
+  if(DEBUG && debugflag)
+    console("in is_zapped()\n");
+
   char *func_str = "is_zapped()";
   test_kernel_mode(func_str);
   if(Current->z_status == ZAPPED)
@@ -747,17 +798,7 @@ void enableInterrupts()
 {
   char *func_str = "enableInterrupts()";
   test_kernel_mode(func_str);
-  
-  //if not in kernel mode...
-  /*
-  if((PSR_CURRENT_MODE & psr_get()) == 0){
-    console("Kernel Error: Not in kernel mode. may not enable interrupts\n");
-    halt(1);
-  //else is in kernel mode...
-  } else
-    We ARE in kernel mode */
-  
-   psr_set( psr_get() | PSR_CURRENT_INT );
+  psr_set( psr_get() | PSR_CURRENT_INT );
 } /* enablebleInterrupts */ 
 
 
@@ -768,16 +809,7 @@ void disableInterrupts()
 {
   char *func_str = "disableInterrupts()";
   test_kernel_mode(func_str);
-
-  /* turn the interrupts OFF iff we are in kernel mode */
-  /*
-  if((PSR_CURRENT_MODE & psr_get()) == 0) {
-    //not in kernel mode
-    console("Kernel Error: Not in kernel mode, may not disable interrupts\n");
-    halt(1);
-  } else
-     We ARE in kernel mode */
-    psr_set( psr_get() & ~PSR_CURRENT_INT );
+  psr_set( psr_get() & ~PSR_CURRENT_INT );
 } /* disableInterrupts */ 
 
 int getpid()
@@ -856,6 +888,7 @@ int block_me(int new_status)
 
   proc_ptr walker = BlockedList;
 
+
   if(new_status <= 10)
   {
     console("Error: invalid status.\n");
@@ -865,13 +898,14 @@ int block_me(int new_status)
   if(Current->z_status == ZAPPED)
     return -1;
 
+  // Insert Current to end of BlockedList
   Current->status = BLOCKED;
   while(walker->next_proc_ptr != NULL)
   {
     walker = walker->next_proc_ptr;
   }
-
   walker->next_proc_ptr = Current;
+
   dispatcher();
 
   return 0;
@@ -882,6 +916,8 @@ int unblock_proc(int pid)
   char *func_str = "unblock_proc()";
   test_kernel_mode(func_str);
   proc_ptr walker = BlockedList;
+
+  // Find process in BlockedList with designated PID
   while(walker->pid != pid && walker->next_proc_ptr != NULL)
   {
     walker = walker->next_proc_ptr;
@@ -908,6 +944,7 @@ void clock_handler()
   char *func_str = "clock_handler()";
   test_kernel_mode(func_str);
 
+  // The first interrupt for the Current process
 	if(Current->start_time == 0)
 		Current->start_time = read_time();
 	time_slice();
@@ -931,11 +968,13 @@ int read_cur_start_time(void)
 	return Current->start_time;
 }
 
+
 void time_slice(void)
 {
   char *func_str = "time_slice()";
   test_kernel_mode(func_str);
 
+  // Current process has exceeded 79ms of runtime 
 	if(((read_time() - read_cur_start_time()) * 1000) >= 80)
   {
     Current->start_time = 0;
@@ -949,6 +988,9 @@ void time_slice(void)
 
 static void BlkList_Delete(proc_ptr process)
 {
+  if(DEBUG && debugflag)
+    console("in BlkList_Delete()\n");
+
    char *func_str = "BlkList_Delete()";
    test_kernel_mode(func_str);
 
