@@ -19,6 +19,7 @@ extern int start1 (char *);
 void dispatcher(void);
 void launch();
 static void enableInterrupts();
+void disableInterrupts();
 static void check_deadlock();
 static void RdyList_Insert(proc_ptr process);
 int getpid();
@@ -29,7 +30,7 @@ int check_io();
 void test_kernel_mode(char *str);
 int block_me(int new_status);
 int unblock_proc(int pid);
-void clock_handler();
+void clock_handler(int dev, void * unit);
 int read_time(void);
 int read_cur_start_time(void);
 void time_slice(void);
@@ -56,6 +57,7 @@ proc_ptr Current;
 /* the next pid to be assigned */
 unsigned int next_pid = SENTINELPID;
 
+void (*int_vec[NUM_INTS])(int dev, void * unit);
 
 /* -------------------------- Functions ----------------------------------- */
 /* ------------------------------------------------------------------------
@@ -214,6 +216,7 @@ static void RdyList_Insert(proc_ptr process)
    ------------------------------------------------------------------------ */
 int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
 {
+
    char *func_str = "fork1()";
    int proc_slot = next_pid % MAXPROC;
    int pid_count = 0;
@@ -226,7 +229,7 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
    /* test if in kernel mode; halt if in user mode */
    test_kernel_mode(func_str);
 
-   //enableInterrupts();
+   disableInterrupts();
 
    /* Return if stack size is too small */
    if(stacksize < USLOSS_MIN_STACK){
@@ -539,8 +542,11 @@ void dispatcher(void)
 {
    if(DEBUG && debugflag)
     console("in dispatcher()\n");
+
    char *func_str = "dispatcher()";
    test_kernel_mode(func_str);
+   disableInterrupts();
+
    proc_ptr next_process = NULL;
    proc_ptr walker = NULL;
    
@@ -558,6 +564,7 @@ void dispatcher(void)
     // Execute Current
     Current = next_process;
     Current->status = RUNNING;
+    Current->start_time = (sys_clock()/1000);
     context_switch(NULL, &Current->state);
   }
 
@@ -575,6 +582,7 @@ void dispatcher(void)
       BlockedList = Current;
       Current = next_process;
       Current->status = RUNNING;
+      Current->start_time = (sys_clock()/1000);
       context_switch(&BlockedList->state, &Current->state);
     }
 
@@ -594,6 +602,7 @@ void dispatcher(void)
       walker = Current;
       Current = next_process;
       Current->status = RUNNING;
+      Current->start_time = (sys_clock()/1000);
       context_switch(&walker->state, &Current->state);
     }
 
@@ -613,6 +622,7 @@ void dispatcher(void)
 
       Current = next_process;
       Current->status = RUNNING;
+      Current->start_time = (sys_clock()/1000);
       context_switch(&walker->state, &Current->state);
     }
 
@@ -639,10 +649,11 @@ void dispatcher(void)
 
     Current = next_process;
     Current->status = RUNNING; 
+    Current->start_time = (sys_clock()/1000);
     context_switch(&walker->state, &Current->state);
 
   }
-   
+   enableInterrupts();
    p1_switch(Current->pid, next_process->pid);
 } /* dispatcher */
 
@@ -946,14 +957,12 @@ int unblock_proc(int pid)
 }  
 
 
-void clock_handler()
+void clock_handler(int dev, void * unit)
 {
   char *func_str = "clock_handler()";
   test_kernel_mode(func_str);
 
   // The first interrupt for the Current process
-	if(Current->start_time == 0)
-		Current->start_time = read_time();
 	time_slice();
 
 }
@@ -963,8 +972,11 @@ int read_time(void)
   char *func_str = "read_time()";
   test_kernel_mode(func_str);
 
+  int time = sys_clock()/1000;
+  time = time - read_cur_start_time();
+
 	// Return system time in microseconds
-	return sys_clock() /1000;
+	return time;
 }
 
 int read_cur_start_time(void)
@@ -982,11 +994,8 @@ void time_slice(void)
   test_kernel_mode(func_str);
 
   // Current process has exceeded 79ms of runtime 
-	if((read_time() - read_cur_start_time()) >= 80)
-  {
-    Current->start_time = 0;
+	if(read_time() >= 80)
 		dispatcher();
-  }
 	else
 		return; 
 }
