@@ -920,14 +920,14 @@ int block_me(int new_status)
     halt(1);
   }
 
-  if(Current->zapped_status == ZAPPED)
-    return -1;
-
   // Insert Current to end of BlockedList
   Current->status = BLOCKED;
   dispatcher();
 
-  return 0;
+  if(Current->zapped_status == ZAPPED)
+    return -1;
+  else
+    return 0;
 }
 
 int unblock_proc(int pid)
@@ -937,12 +937,7 @@ int unblock_proc(int pid)
   proc_ptr walker = NULL;
   int i;
 
-  // Find process in BlockedList with designated PID
-  /*while(walker->pid != pid && walker->next_proc_ptr != NULL)
-  {
-    walker = walker->next_proc_ptr;
-  }*/
-
+  // Find process with the same process PID as the argument PID
   for(i = 0; i < MAXPROC; i++)
   {
     if(pid == ProcTable[i].pid)
@@ -951,16 +946,16 @@ int unblock_proc(int pid)
 
   if(walker == NULL || walker->status != BLOCKED || walker == Current || walker->status <= 10)
     return -2;
-
-  if(Current->zapped_status == ZAPPED)
-    return -1;
   
   BlkList_Delete(walker);
   walker->status = READY;
   RdyList_Insert(walker);
   dispatcher();
 
-  return 0;
+  if(Current->zapped_status == ZAPPED)
+    return -1;
+  else
+    return 0;
 }  
 
 
