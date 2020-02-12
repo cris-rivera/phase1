@@ -98,7 +98,7 @@ void startup()
       ProcTable[i].zapped_status = NONE;
       ProcTable[i].zapper_status = NONE;
       ProcTable[i].z_pid = -1;
-      ProcTable[i].start_time = 0;
+      ProcTable[i].start_time = -1;
    }  
    
    /* Initialize the Ready list, etc. */
@@ -233,10 +233,8 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
    disableInterrupts();
 
    /* Return if stack size is too small */
-   if(stacksize < USLOSS_MIN_STACK){
-      console("fork1(): stack size too small\n");
-      halt(1);
-   }
+   if(stacksize < USLOSS_MIN_STACK)
+      return -2;
 
    /* find an empty slot in the process table */
    while(pid_count < MAXPROC && ProcTable[proc_slot].status != EMPTY)
@@ -566,6 +564,8 @@ void dispatcher(void)
     Current = next_process;
     Current->status = RUNNING;
     Current->start_time = (sys_clock()/1000);
+    p1_switch(0, Current->pid);
+    enableInterrupts();
     context_switch(NULL, &Current->state);
   }
 
@@ -584,6 +584,8 @@ void dispatcher(void)
       Current = next_process;
       Current->status = RUNNING;
       Current->start_time = (sys_clock()/1000);
+      p1_switch(walker->pid, Current->pid);
+      enableInterrupts();
       context_switch(&BlockedList->state, &Current->state);
     }
 
@@ -604,6 +606,8 @@ void dispatcher(void)
       Current = next_process;
       Current->status = RUNNING;
       Current->start_time = (sys_clock()/1000);
+      p1_switch(walker->pid, Current->pid);
+      enableInterrupts();
       context_switch(&walker->state, &Current->state);
     }
 
@@ -624,6 +628,8 @@ void dispatcher(void)
       Current = next_process;
       Current->status = RUNNING;
       Current->start_time = (sys_clock()/1000);
+      p1_switch(walker->pid, Current->pid);
+      enableInterrupts();
       context_switch(&walker->state, &Current->state);
     }
 
@@ -651,11 +657,11 @@ void dispatcher(void)
     Current = next_process;
     Current->status = RUNNING; 
     Current->start_time = (sys_clock()/1000);
+    p1_switch(walker->pid, Current->pid);
+    enableInterrupts();
     context_switch(&walker->state, &Current->state);
 
   }
-   enableInterrupts();
-   p1_switch(Current->pid, next_process->pid);
 } /* dispatcher */
 
 
@@ -964,7 +970,6 @@ void clock_handler(int dev, void * unit)
   test_kernel_mode(func_str);
 
   // The first interrupt for the Current process
-	console("calling time slice()\n");
   time_slice();
   return;
 
@@ -974,7 +979,7 @@ int read_time(void)
 {
   char *func_str = "read_time()";
   test_kernel_mode(func_str);
-  console("in read time\n");
+  
   int time = sys_clock()/1000;
   time = time - read_cur_start_time();
 
@@ -986,7 +991,7 @@ int read_cur_start_time(void)
 {
   char *func_str = "read_cur_start_time()";
   test_kernel_mode(func_str);
-  console("in read cur\n");
+  
 	return Current->start_time;
 }
 
@@ -995,7 +1000,7 @@ void time_slice(void)
 {
   char *func_str = "time_slice()";
   test_kernel_mode(func_str);
-  console("in time slice\n");
+  
   // Current process has exceeded 79ms of runtime 
 	if(read_time() >= 80)
 		dispatcher();

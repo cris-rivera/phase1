@@ -39,7 +39,7 @@ int XXp1(char *arg)
 		console("Getpid passed. %d %d\n",getpid(),pidlist[i]);
 	}
 	i++;
-
+  
 	quit(FLAG1);
 	return 0;
 }
