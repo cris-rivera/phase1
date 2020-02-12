@@ -7,7 +7,7 @@ start1 forks XXp1 and is blocked on the join of XXp1 and XXp1 zaps itself */
 
 int XXp1(char *);
 char buf[256];
-int pid1;
+int pid1 = 0;
 
 int start1(char *arg)
 {

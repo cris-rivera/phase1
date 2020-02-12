@@ -255,6 +255,9 @@ int fork1(char *name, int (*f)(char *), char *arg, int stacksize, int priority)
       return -1;
    }
 
+   if(priority < 1 || priority > 6)
+     return -1;
+
    /* fill-in entry in process table */
    if ( strlen(name) >= (MAXNAME - 1) ) {
       console("fork1(): Process name is too long.  Halting...\n");
@@ -584,7 +587,7 @@ void dispatcher(void)
       Current = next_process;
       Current->status = RUNNING;
       Current->start_time = (sys_clock()/1000);
-      p1_switch(walker->pid, Current->pid);
+      p1_switch(BlockedList->pid, Current->pid);
       enableInterrupts();
       context_switch(&BlockedList->state, &Current->state);
     }
@@ -911,9 +914,6 @@ int block_me(int new_status)
   char *func_str = "block_me()";
   test_kernel_mode(func_str);
 
-  proc_ptr walker = BlockedList;
-
-
   if(new_status <= 10)
   {
     console("Error: invalid status.\n");
@@ -925,12 +925,6 @@ int block_me(int new_status)
 
   // Insert Current to end of BlockedList
   Current->status = BLOCKED;
-  while(walker->next_proc_ptr != NULL)
-  {
-    walker = walker->next_proc_ptr;
-  }
-  walker->next_proc_ptr = Current;
-
   dispatcher();
 
   return 0;
@@ -940,22 +934,28 @@ int unblock_proc(int pid)
 {
   char *func_str = "unblock_proc()";
   test_kernel_mode(func_str);
-  proc_ptr walker = BlockedList;
+  proc_ptr walker = NULL;
+  int i;
 
   // Find process in BlockedList with designated PID
-  while(walker->pid != pid && walker->next_proc_ptr != NULL)
+  /*while(walker->pid != pid && walker->next_proc_ptr != NULL)
   {
     walker = walker->next_proc_ptr;
+  }*/
+
+  for(i = 0; i < MAXPROC; i++)
+  {
+    if(pid == ProcTable[i].pid)
+      walker = &ProcTable[i];
   }
 
-  if(walker->status != BLOCKED || walker == Current || walker->status <= 10 || walker->pid != pid)
+  if(walker == NULL || walker->status != BLOCKED || walker == Current || walker->status <= 10)
     return -2;
 
   if(Current->zapped_status == ZAPPED)
     return -1;
-
-  //TODO delete unblocked process from BlockedList
   
+  BlkList_Delete(walker);
   walker->status = READY;
   RdyList_Insert(walker);
   dispatcher();
