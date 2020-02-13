@@ -649,7 +649,7 @@ void dispatcher(void)
    /* Sets top of ready list as next runnable process.
     * Sets the top of ready list to the next ready process.
     * disconnects next runnable process from ready list*/
-    next_process = ReadyList;
+    /*next_process = ReadyList;
     ReadyList = ReadyList->next_proc_ptr;
     next_process->next_proc_ptr = NULL;
     
@@ -659,6 +659,21 @@ void dispatcher(void)
 
     Current = next_process;
     Current->status = RUNNING; 
+    Current->start_time = (sys_clock()/1000);
+    p1_switch(walker->pid, Current->pid);
+    enableInterrupts();
+    context_switch(&walker->state, &Current->state);*/
+
+    walker = Current;
+    walker->status = READY;
+    RdyList_Insert(walker);
+
+    next_process = ReadyList;
+    ReadyList = ReadyList->next_proc_ptr;
+    next_process->next_proc_ptr = NULL;
+
+    Current = next_process;
+    Current->status = RUNNING;
     Current->start_time = (sys_clock()/1000);
     p1_switch(walker->pid, Current->pid);
     enableInterrupts();
@@ -712,8 +727,8 @@ static void check_deadlock()
    }
 
    if(process_count > 1){
-      if(DEBUG && debugflag)
-        console("check_deadlock(): process_count = %d\n", process_count);
+      console("check_deadlock(): process_count = %d\n", process_count);
+      console("check_deadlock(): processes still present. Halting...\n");
       halt(1);
    }
    
@@ -737,7 +752,7 @@ int zap(int pid)
 
   if(pid == Current->pid)
   {
-    console("Zap(): Cannot process cannot zap itself!\n");
+    console("zap(): Process cannot zap itself!\n");
     halt(1);
   }
 
@@ -750,7 +765,7 @@ int zap(int pid)
   
   if(proc_slot == -1)
   {
-    console("Error: pid does not exist!\n");
+    console("zap(): pid does not exist!\n");
     halt(1);
   }
 
