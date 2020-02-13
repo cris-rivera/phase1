@@ -528,9 +528,12 @@ void quit(int code)
       //If parent is blocked, unblock it.
       if(parent_ptr != NULL)
       {
-       BlkList_Delete(parent_ptr); //may cause issues later, keep an eye on it.
-       parent_ptr->status = READY;
-       RdyList_Insert(parent_ptr);
+       if(parent_ptr->status == BLOCKED)
+       {
+        BlkList_Delete(parent_ptr); //may cause issues later, keep an eye on it.
+        parent_ptr->status = READY;
+        RdyList_Insert(parent_ptr);
+       }
       }
     }
     
@@ -612,6 +615,7 @@ void dispatcher(void)
       {
         walker = walker->next_proc_ptr;
       }
+      
       walker->next_proc_ptr = Current;
 
       // Execute next process in ReadyList
