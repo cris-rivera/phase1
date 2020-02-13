@@ -40,7 +40,8 @@ int XXp1(char *arg)
    if ( strcmp(arg, "XXp4") == 0 ) {
       for (i = 0; i < 10000000; i++)
          if ( i == 2500000 || i == 5000000 || i == 7500000)
-            dump_processes();
+            //dump_processes();
+            console("dump_processes();\n");
    }
    else {
       for (i = 0; i < 10000000; i++)

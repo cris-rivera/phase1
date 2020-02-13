@@ -101,6 +101,7 @@ int XXp4(char *arg)
 {
   printf("XXp4(): started\n");
   printf("XXp4(): arg = `%s'\n", arg);
+  
   quit(-4);
   return 0;
 } /* XXp4 */

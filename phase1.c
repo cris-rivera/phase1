@@ -399,7 +399,9 @@ int join(int *code)
     Current->status = BLOCKED;
     dispatcher();
   }
-  
+ 
+  *code = Current->child_proc_ptr->exit_status;
+
   //check if parent is zapped
  //if yes, return -1
  if(Current->zapped_status == ZAPPED)
@@ -408,7 +410,8 @@ int join(int *code)
   // Child has quit
   if(Current->child_proc_ptr->status == DEAD)
   {
-    *code = Current->child_proc_ptr->exit_status;
+    //*code = Current->child_proc_ptr->exit_status;
+    
     temp_pid = Current->child_proc_ptr->pid;
     temp = Current->child_proc_ptr;
 
@@ -514,14 +517,22 @@ void quit(int code)
           walker = walker->next_zapper_ptr;
 
       }
+      if(parent_ptr != NULL)
+      {
+        parent_ptr->status = READY;
+        RdyList_Insert(parent_ptr);
+      }
     }
-     
+    else
+    {
       //If parent is blocked, unblock it.
       if(parent_ptr != NULL)
       {
+       BlkList_Delete(parent_ptr); //may cause issues later, keep an eye on it.
        parent_ptr->status = READY;
        RdyList_Insert(parent_ptr);
       }
+    }
     
 
     dispatcher();
@@ -722,7 +733,7 @@ static void check_deadlock()
    int process_count = 0;
    for(int i = 0; i < MAXPROC; i++)
    {
-      if(ProcTable[i].status != EMPTY)
+      if(ProcTable[i].status != EMPTY && ProcTable[i].status != DEAD)
          process_count++;
    }
 
@@ -733,8 +744,7 @@ static void check_deadlock()
    }
    
    if(process_count == 1){
-      if(DEBUG && debugflag)
-        console("check_deadlock(): process_count = 0\n");
+      console("All processes completed.\n");
       halt(0);
    }
 
